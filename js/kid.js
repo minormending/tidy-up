@@ -29,6 +29,10 @@ const Kid = (() => {
     document.querySelectorAll('.screen').forEach(s => {
       s.hidden = s.dataset.screen !== name;
     });
+    /* Hidden mid-job, where it would sit on top of the progress bar on a
+       narrow screen, and in the panel it opens. */
+    const corner = document.getElementById('parent-corner');
+    if (corner) corner.hidden = name === 'task' || name === 'parent';
   }
 
   function level() { return Store.get().supportLevel || 1; }
@@ -245,7 +249,7 @@ const Kid = (() => {
     finishSession();
   }
 
-  /* A wrong tap should not trap him. Stars already earned stay earned -
+  /* A wrong tap should not trap them. Stars already earned stay earned -
      nothing here takes one back - and the rest of the run is dropped. */
   function abortSession() {
     stopTimer();

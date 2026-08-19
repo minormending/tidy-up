@@ -6,7 +6,7 @@ const Parent = (() => {
 
   const LEVELS = [
     { n: 1, title: 'Full help', body: 'One picture, your voice plays on its own, timer running.' },
-    { n: 2, title: 'Voice on request', body: 'Picture and timer. He taps the picture if he wants to hear you.' },
+    { n: 2, title: 'Voice on request', body: 'Picture and timer. They tap the picture if they want to hear you.' },
     { n: 3, title: 'No timer', body: 'Just the picture and the button. Voice still on tap.' },
     { n: 4, title: 'All at once', body: 'Every job on one screen, one button. Almost "go and tidy up".' }
   ];
@@ -47,12 +47,10 @@ const Parent = (() => {
     $('parent-corner').classList.remove('is-holding');
     render();
     Kid.show('parent');
-    $('parent-corner').hidden = true;
   }
 
   function close() {
     stopPreview();
-    $('parent-corner').hidden = false;
     Kid.renderStart();
   }
 
@@ -410,8 +408,8 @@ const Parent = (() => {
     const nudge = $('fade-nudge');
     nudge.hidden = !(clean && current < 4);
     if (!nudge.hidden) {
-      nudge.textContent = 'He has finished inside the timer every run for the last ' + recent.length +
-        '. That is usually the moment to give him less help, not more stars.';
+      nudge.textContent = 'They have finished inside the timer every run for the last ' + recent.length +
+        '. That is usually the moment to give them less help, not more stars.';
     }
   }
 

@@ -420,39 +420,64 @@ button {
 
 /* ---- grown-up entry ---- */
 
-/* The way in for a grown-up. The dot is faint enough that the child has
-   no reason to press it, and a press alone does nothing - it takes a
-   deliberate hold, which the dot grows to acknowledge. */
+/* The way in for a grown-up. It is a real, visible button because a faint
+   dot was not findable; a plain tap still does nothing, so the hold is
+   what keeps a five-year-old out, and the ring fills to show it working. */
 .parent-corner {
   position: fixed;
-  top: 0;
-  right: 0;
-  width: 68px;
-  height: 68px;
+  top: max(10px, env(safe-area-inset-top));
+  right: 10px;
+  width: 52px;
+  height: 52px;
   z-index: 40;
-  background: transparent;
-  -webkit-touch-callout: none;
-}
-
-.parent-corner::after {
-  content: '';
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 9px;
-  height: 9px;
   border-radius: 50%;
-  background: #d5cfbf;
-  transition: transform 220ms ease, background-color 220ms ease;
-}
-
-.parent-corner.is-holding::after {
-  transform: scale(2.3);
-  background: #a9a291;
-  transition: transform 1600ms linear, background-color 1600ms linear;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  color: #7d786c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+  -webkit-touch-callout: none;
+  transition: color 150ms ease, border-color 150ms ease;
 }
 
 .parent-corner[hidden] { display: none; }
+
+.parent-glyph {
+  width: 25px;
+  height: 25px;
+  display: block;
+}
+
+.parent-ring {
+  position: absolute;
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.parent-ring-fill {
+  fill: none;
+  stroke: var(--go);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 138.2;
+  stroke-dashoffset: 138.2;
+  transition: stroke-dashoffset 200ms ease;
+}
+
+.parent-corner.is-holding {
+  color: var(--ink);
+  border-color: transparent;
+}
+
+.parent-corner.is-holding .parent-ring-fill {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1600ms linear;
+}
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
@@ -548,7 +573,9 @@ button {
 
 .field { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.9rem; }
 .field--row { flex-direction: row; align-items: center; gap: 0.6rem; }
-.field--row input[type="range"] { flex: 1; }
+/* Without min-width:0 the range keeps its intrinsic width, the row
+   overflows, and the seconds readout slides under the arrow column. */
+.field--row input[type="range"] { flex: 1; min-width: 0; }
 
 .input {
   width: 100%;

@@ -36,11 +36,11 @@ keeping when the temptation arrives to make this more fun.
   one tile from another.
 - **The picture is a photo of the real bin.** "Clean your room" is an abstract
   category a five-year-old cannot execute. "Put the blocks in the blue bin" is
-  a task. A photo of *his* bin removes the last abstraction step. The four
+  a task. A photo of *their own* bin removes the last abstraction step. The four
   built-in pictures are placeholders — replace them.
 - **Instructions are audio, in your own voice.** A pre-reader cannot use text,
   and your recorded voice beats text-to-speech for a child this age.
-- **Progress is dots, not numerals.** He cannot read "3 / 4".
+- **Progress is dots, not numerals.** They cannot read "3 / 4".
 - **Stars are earned and never removed.** Response cost — taking points away —
   reliably backfires at this age and turns tidying into a power struggle.
 - **The star is for finishing, not for beating the clock.** Requiring a perfect
@@ -69,15 +69,17 @@ two good weeks.
 
 ## Setting it up
 
-There is a small faint dot in the **top-right corner of the screen**. Hold it
-for about 1.6 seconds and the grown-up panel opens — the dot grows while you
-hold, so you can tell it is working. A plain tap does nothing, which is why a
-five-year-old does not get in by accident. There you can:
+There is a round button in the **top-right corner of the screen**. Press and
+hold it for about 1.6 seconds and the grown-up panel opens; a ring fills around
+it while you hold, so you can tell it is working. A plain tap does nothing,
+which is what keeps a five-year-old out — the button is visible, the hold is
+the lock. It hides itself during a job, and the panel says how to get back in.
+There you can:
 
 - name each job, pick its icon and colour (the picker has a search box — try
   "bin", "ball", "bag", "pet"), photograph the real bin or shelf, and record the
   instruction
-- set the timer per job — from what he can actually sustain, not from what
+- set the timer per job — from what they can actually sustain, not from what
   sounds reasonable to an adult
 - choose the support level, and see whether the recent runs justify stepping
   it down

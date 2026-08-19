@@ -84,7 +84,7 @@
 
       <section class="block">
         <h2>How much help</h2>
-        <p class="hint">Step this down as he needs it less. A system with no exit becomes permanent scaffolding.</p>
+        <p class="hint">Step this down as they need it less. A system with no exit becomes permanent scaffolding.</p>
         <div id="level-list"></div>
         <p class="nudge" id="fade-nudge" hidden></p>
       </section>
@@ -95,7 +95,7 @@
           <span>Default timer for a new job: <b id="seconds-out">150</b>s</span>
           <input type="range" id="default-seconds" min="30" max="600" step="15" value="150">
         </label>
-        <p class="hint">Set this from what he can actually sustain, not from what sounds reasonable. A timer he keeps failing is training failure.</p>
+        <p class="hint">Set this from what they can actually sustain, not from what sounds reasonable. A timer they keep failing is training failure.</p>
         <label class="field field--row">
           <input type="checkbox" id="chime-toggle" checked>
           <span>Play the little tones</span>
@@ -107,12 +107,17 @@
         <p class="stat" id="star-summary"></p>
         <div id="week-history" class="history"></div>
         <div class="btn-row">
-          <button class="btn btn--quiet" id="reset-today">Let him do today again</button>
+          <button class="btn btn--quiet" id="reset-today">Let them do today again</button>
           <button class="btn btn--quiet" id="reset-stars">Clear this week</button>
         </div>
         <p class="hint">Nothing in the app ever takes a star away. Clearing is a grown-up action, on purpose.</p>
       </section>
 
+
+      <section class="block">
+        <h2>Getting back here</h2>
+        <p class="hint">Press and hold the round button in the top corner of the screen for about a second and a half. It fills up while you hold it. A quick tap does nothing, which is what keeps a five-year-old out.</p>
+      </section>
 
       <section class="block">
         <h2>Backup and moving</h2>
@@ -140,7 +145,19 @@
 
 </main>
 
-<button class="parent-corner" id="parent-corner" aria-label="Grown-up settings"></button>
+<button class="parent-corner" id="parent-corner" aria-label="Grown-up settings, press and hold">
+  <svg class="parent-ring" viewBox="0 0 48 48" aria-hidden="true">
+    <circle class="parent-ring-fill" cx="24" cy="24" r="22"></circle>
+  </svg>
+  <svg class="parent-glyph" viewBox="0 0 24 24" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M3.5 8.5h8.5M18 8.5h2.5"></path>
+      <path d="M3.5 15.5h2.5M12 15.5h8.5"></path>
+      <circle cx="15" cy="8.5" r="3"></circle>
+      <circle cx="9" cy="15.5" r="3"></circle>
+    </g>
+  </svg>
+</button>
 
 <script src="js/idb.js"></script>
 <script src="js/store.js"></script>
