@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="description" content="A wordless tidy-up helper for children who cannot read yet.">
+<meta name="theme-color" content="#f7f5ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Tidy Up</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<main id="app">
+
+  <section class="screen" id="screen-start" data-screen="start">
+    <div class="stars-row" id="week-stars" aria-hidden="true"></div>
+    <div class="tile-grid" id="tile-grid"></div>
+    <button class="go-button" id="go-button" aria-label="Start every job">
+      <svg viewBox="0 0 24 24" class="glyph" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+    </button>
+  </section>
+
+  <section class="screen" id="screen-task" data-screen="task" hidden>
+    <div class="timer-wrap" id="timer-wrap">
+      <svg class="timer-ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="ring-track" cx="50" cy="50" r="45"></circle>
+        <circle class="ring-fill" id="ring-fill" cx="50" cy="50" r="45"></circle>
+      </svg>
+      <button class="task-photo" id="task-photo" aria-label="Hear the job again"></button>
+    </div>
+    <div class="progress-track" id="progress-track" aria-hidden="true">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <button class="check-button" id="check-button" aria-label="Job done">
+      <svg viewBox="0 0 24 24" class="glyph" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </section>
+
+  <section class="screen" id="screen-done" data-screen="done" hidden>
+    <div class="big-star" id="big-star">
+      <svg viewBox="0 0 24 24" class="glyph" aria-hidden="true"><path d="M12 2.6l2.9 6.1 6.6.9-4.8 4.7 1.2 6.7-5.9-3.2-5.9 3.2 1.2-6.7L2.5 9.6l6.6-.9z"/></svg>
+    </div>
+    <div class="stars-row stars-row--big" id="session-stars" aria-hidden="true"></div>
+    <button class="replay-button" id="replay-button" aria-label="Hear it again">
+      <svg viewBox="0 0 24 24" class="glyph" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9a4.2 4.2 0 010 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </section>
+
+  <section class="screen screen--rest" id="screen-rest" data-screen="rest" hidden>
+    <div class="rest-mark" aria-hidden="true"></div>
+  </section>
+
+</main>
+
+<button class="parent-corner" id="parent-corner" aria-label="Grown-up settings"></button>
+
+</body>
+</html>
