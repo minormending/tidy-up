@@ -11,8 +11,10 @@ anywhere on the child's side of the app.
 
 ## What it does
 
-**Pick.** A grid of pictures, one per job. Tapping a picture runs that job.
-The green button runs everything still left today.
+**Pick.** A grid of pictures, one per job. Tapping a picture runs that job —
+including one already done, which can be done again. The green button runs
+everything still left today, and steps aside once nothing is left; "Let them do
+today again" in the panel starts the whole round over.
 
 **One job.** A single large picture, a ring that visibly drains, and one
 enormous check button. Nothing else on screen is tappable. Tapping the
@@ -48,8 +50,11 @@ keeping when the temptation arrives to make this more fun.
   you tighten the standard over weeks.
 - **Running out of time is not a failure.** One soft tone, and the button still
   works. No alarm, no red screen, no lost star.
-- **A job done today cannot be run again for a second star.** Tapping it just
-  replays the voice clip. There is no star farming.
+- **A job can be done as many times as it needs doing.** Blocks come out
+  again. The tile shows a tick the first time and then a count, so the day's
+  record is honest about what actually happened, and every run earns its star.
+  The big finish is kept for clearing the whole list, so it does not fire again
+  on every repeat.
 - **The app is deliberately boring.** No characters, no levels, no unlockables,
   no sound worth replaying. If the app is more interesting than the task, it
   converts tidy-up time into screen time — the main way a thing like this

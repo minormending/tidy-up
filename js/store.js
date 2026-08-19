@@ -76,6 +76,13 @@ const Store = (() => {
     if (!Array.isArray(state.tasks) || state.tasks.length === 0) {
       state.tasks = seedTasks(state.defaultSeconds);
     }
+    /* Older saves recorded a list of finished jobs rather than counts. */
+    if (state.done && Array.isArray(state.done.ids)) {
+      const counts = {};
+      state.done.ids.forEach(id => { counts[id] = 1; });
+      state.done = { date: state.done.date, counts: counts };
+    }
+
     /* Older saves predate icons and tile colours. */
     state.tasks.forEach((t, i) => {
       if (typeof t.icon !== 'string' || !t.icon) t.icon = 'star';
@@ -180,26 +187,38 @@ const Store = (() => {
     save();
   }
 
-  /* Which jobs are already finished today, so a tile can show a tick and
-     cannot be run twice for another star. Clears itself at midnight. */
+  /* How many times each job has been finished today. A job can be done
+     again - blocks get tidied more than once - so this counts rather than
+     just remembering that it happened. Clears itself at midnight. */
   function today() {
     const d = new Date();
     return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
   }
 
+  function doneCounts() {
+    if (!state.done || state.done.date !== today()) return {};
+    return state.done.counts || {};
+  }
+
+  function doneCount(id) {
+    return doneCounts()[id] || 0;
+  }
+
+  /* The jobs done at least once today, for "what is left" and progress. */
   function doneToday() {
-    if (!state.done || state.done.date !== today()) return [];
-    return state.done.ids;
+    const counts = doneCounts();
+    return Object.keys(counts).filter(id => counts[id] > 0);
   }
 
   function markDone(id) {
-    if (!state.done || state.done.date !== today()) state.done = { date: today(), ids: [] };
-    if (state.done.ids.indexOf(id) < 0) state.done.ids.push(id);
+    if (!state.done || state.done.date !== today()) state.done = { date: today(), counts: {} };
+    if (!state.done.counts) state.done.counts = {};
+    state.done.counts[id] = (state.done.counts[id] || 0) + 1;
     save();
   }
 
   function clearToday() {
-    state.done = { date: today(), ids: [] };
+    state.done = { date: today(), counts: {} };
     save();
   }
 
@@ -213,7 +232,7 @@ const Store = (() => {
     load, save, get, set, tasks, task, isFirstRun,
     addTask, updateTask, removeTask, moveTask,
     awardStar, recordSession, resetStars,
-    doneToday, markDone, clearToday,
+    doneToday, doneCounts, doneCount, markDone, clearToday,
     seedTasks, PALETTE, inkFor, WEEK_MS
   };
 })();

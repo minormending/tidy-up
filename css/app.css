@@ -212,24 +212,29 @@ button {
 
 .tile:active { transform: scale(0.96); }
 
-.tile.is-done { opacity: 0.42; }
+/* Only lightly faded: a finished job can be done again, so it should
+   still look like something worth pressing. */
+.tile.is-done { opacity: 0.78; }
 
-.tile-check {
+.tile-badge {
   position: absolute;
   right: 6%;
   top: 6%;
   width: 22%;
-  height: auto;
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--go);
   color: #fff;
-  padding: 5%;
-  display: none;
-  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(13px, 3.2vh, 26px);
+  font-weight: 600;
+  line-height: 1;
+  z-index: 1;
 }
 
-.tile.is-done .tile-check { display: block; }
+.tile-badge-glyph { width: 60%; height: 60%; display: block; }
 
 .go-button {
   width: clamp(84px, 15vh, 124px);

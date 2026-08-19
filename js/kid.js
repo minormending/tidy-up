@@ -19,10 +19,15 @@ const Kid = (() => {
     return '<svg viewBox="0 0 24 24" class="glyph" aria-hidden="true"><path d="' + STAR_PATH + '"/></svg>';
   }
 
-  function tickSvg() {
-    return '<svg viewBox="0 0 24 24" class="glyph tile-check" aria-hidden="true">' +
+  /* Nothing before a job is done, a tick the first time, and after that
+     how many times it has been done today. */
+  function badgeMarkup(count) {
+    if (!count) return '';
+    const inner = count > 1 ? String(count) :
+      '<svg viewBox="0 0 24 24" class="tile-badge-glyph" aria-hidden="true">' +
       '<path d="' + TICK_PATH + '" fill="none" stroke="currentColor" stroke-width="3" ' +
       'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    return '<span class="tile-badge" aria-hidden="true">' + inner + '</span>';
   }
 
   function show(name) {
@@ -83,11 +88,13 @@ const Kid = (() => {
     el.tileGrid.style.gridTemplateColumns = 'repeat(' + (tasks.length <= 2 ? tasks.length || 1 : 2) + ', 1fr)';
 
     for (const task of tasks) {
+      const count = Store.doneCount(task.id);
       const btn = document.createElement('button');
-      btn.className = 'tile' + (done.indexOf(task.id) >= 0 ? ' is-done' : '');
+      btn.className = 'tile' + (count ? ' is-done' : '');
       btn.dataset.taskId = task.id;
-      btn.setAttribute('aria-label', task.label || 'A tidy-up job');
-      btn.innerHTML = tickSvg();
+      btn.setAttribute('aria-label', (task.label || 'A tidy-up job') +
+        (count === 1 ? ', done once today' : count > 1 ? ', done ' + count + ' times today' : ''));
+      btn.innerHTML = badgeMarkup(count);
 
       const picture = document.createElement('span');
       picture.className = 'tile-picture';
@@ -113,10 +120,6 @@ const Kid = (() => {
     Chime.unlock();
     const task = Store.task(btn.dataset.taskId);
     if (!task) return;
-    if (btn.classList.contains('is-done')) {
-      playVoice(task);
-      return;
-    }
     startSession([task.id]);
   }
 
@@ -130,7 +133,7 @@ const Kid = (() => {
   /* ---- a run ---- */
 
   async function startSession(queue) {
-    session = { queue: queue, index: 0, earned: 0, beat: 0 };
+    session = { queue: queue, index: 0, earned: 0, beat: 0, firstTimes: 0 };
     await requestWakeLock();
     if (level() >= 4) return showAllAtOnce();
     await showTask();
@@ -196,6 +199,7 @@ const Kid = (() => {
 
     const task = Store.task(session.queue[session.index]);
     if (task) {
+      if (Store.doneCount(task.id) === 0) session.firstTimes += 1;
       Store.markDone(task.id);
       Store.awardStar();
       session.earned += 1;
@@ -241,6 +245,7 @@ const Kid = (() => {
 
   function completeAll() {
     session.queue.forEach(id => {
+      if (Store.doneCount(id) === 0) session.firstTimes += 1;
       Store.markDone(id);
       Store.awardStar();
       session.earned += 1;
@@ -271,6 +276,7 @@ const Kid = (() => {
 
   function finishSession() {
     const earned = session ? session.earned : 0;
+    const firstTimes = session ? session.firstTimes : 0;
     Store.recordSession({
       tasks: session ? session.queue.length : 0,
       earned: earned,
@@ -278,11 +284,14 @@ const Kid = (() => {
       level: level()
     });
 
-    const allDone = Store.tasks().every(t => Store.doneToday().indexOf(t.id) >= 0);
+    /* The big finish is for clearing the whole list, so it waits for a job
+       that had not been done yet today. Doing one again afterwards earns
+       its star and goes quietly back to the pictures. */
+    const allDone = Store.tasks().every(t => Store.doneCount(t.id) > 0);
     session = null;
     releaseWakeLock();
 
-    if (!allDone) return renderStart();
+    if (!allDone || !firstTimes) return renderStart();
 
     fillStars(el.sessionStars, earned, Math.max(earned, 1));
     show('done');
