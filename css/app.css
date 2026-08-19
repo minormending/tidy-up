@@ -506,3 +506,39 @@ button {
 }
 
 .history-line:last-child { border-bottom: none; }
+
+/* ---- backup, and an incoming setup code ---- */
+
+.banner {
+  background: #eef4e6;
+  border: 1px solid #c6d9b0;
+  border-radius: 12px;
+  padding: 0.85rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.banner[hidden] { display: none; }
+.banner p { margin: 0; font-size: 0.88rem; line-height: 1.5; }
+
+.qr-holder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem;
+  background: #ffffff;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+
+.qr-holder[hidden] { display: none; }
+
+.qr-holder svg {
+  width: min(100%, 260px);
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.qr-holder .hint { text-align: center; }

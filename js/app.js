@@ -1,9 +1,12 @@
 /* Bootstrap. Everything runs from this one page; there is no router. */
 (function () {
-  function boot() {
+  /* Kid.init paints the first screen asynchronously, so it has to finish
+     before anything else is allowed to change screens. */
+  async function boot() {
     Store.load();
-    Kid.init();
+    await Kid.init();
     Parent.init();
+    Backup.init();
   }
 
   /* Offline shell, so the tablet does not need wi-fi to run a session. */

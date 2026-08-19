@@ -331,5 +331,5 @@ const Parent = (() => {
     });
   }
 
-  return { init, open };
+  return { init, open, refresh: render };
 })();

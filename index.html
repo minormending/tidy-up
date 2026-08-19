@@ -61,6 +61,8 @@
         <button class="btn btn--plain" id="parent-close">Done</button>
       </header>
 
+      <div class="banner" id="setup-banner" hidden></div>
+
       <section class="block">
         <h2>Jobs</h2>
         <p class="hint">Photograph the real bin or shelf, and record the instruction in your own voice. Both stay on this device &mdash; nothing is uploaded.</p>
@@ -99,6 +101,19 @@
         <p class="hint">Nothing in the app ever takes a star away. Clearing is a grown-up action, on purpose.</p>
       </section>
 
+
+      <section class="block">
+        <h2>Backup and moving</h2>
+        <p class="hint">A backup file carries everything &mdash; jobs, photos, recordings, stars. Keep one somewhere safe: clearing the browser&rsquo;s site data erases the setup and there is no copy anywhere else.</p>
+        <div class="btn-row">
+          <button class="btn" id="export-file">Save a backup file</button>
+          <label class="btn btn--quiet">Load a backup file<input type="file" id="import-file" accept="application/json,.json" hidden></label>
+        </div>
+        <p class="hint">A setup code moves the job list to another device by camera. Names, timers, and support level only &mdash; a QR code holds about 2.9KB and one photo is fifty times that.</p>
+        <button class="btn btn--quiet" id="show-setup-code">Show setup code</button>
+        <div class="qr-holder" id="setup-code" hidden></div>
+      </section>
+
       <section class="block">
         <h2>Recent runs</h2>
         <div id="session-log" class="history"></div>
@@ -118,8 +133,10 @@
 <script src="js/idb.js"></script>
 <script src="js/store.js"></script>
 <script src="js/chime.js"></script>
+<script src="js/qr.js"></script>
 <script src="js/kid.js"></script>
 <script src="js/parent.js"></script>
+<script src="js/backup.js"></script>
 <script src="js/app.js"></script>
 
 </body>

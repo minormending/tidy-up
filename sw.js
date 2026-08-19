@@ -1,6 +1,6 @@
 /* Cache the shell so the app opens on a tablet with no wi-fi.
    Bump CACHE when any shell file changes. */
-const CACHE = 'tidyup-v1';
+const CACHE = 'tidyup-v2';
 const SHELL = [
   './',
   './index.html',
@@ -8,8 +8,10 @@ const SHELL = [
   './js/idb.js',
   './js/store.js',
   './js/chime.js',
+  './js/qr.js',
   './js/kid.js',
   './js/parent.js',
+  './js/backup.js',
   './js/app.js',
   './manifest.webmanifest',
   './icons/icon.svg',
