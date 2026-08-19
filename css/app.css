@@ -542,7 +542,6 @@ button {
 .btn:disabled { opacity: 0.35; cursor: default; }
 .btn--quiet { min-height: 36px; font-size: 0.85rem; background: #faf8f2; }
 .btn--plain { border-color: transparent; background: transparent; font-weight: 600; }
-.btn--danger { color: #9a2b2b; }
 .btn.is-recording { background: #fdecec; border-color: #e6b3b3; color: #9a2b2b; }
 
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
@@ -599,6 +598,16 @@ button {
 .move-button:disabled { opacity: 0.28; cursor: default; }
 
 .move-glyph { width: 19px; height: 19px; display: block; }
+
+/* Removing a job sits between its arrows, red so it does not get pressed
+   by mistake while reordering. It still asks before deleting anything. */
+.move-button--remove {
+  color: #a33131;
+  border-color: #e8cfcf;
+}
+
+.move-button--remove:hover:not(:disabled) { background: #fdecec; color: #832525; }
+.move-button--remove:active:not(:disabled) { background: #f8dada; }
 
 .thumb {
   position: relative;

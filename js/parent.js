@@ -213,20 +213,13 @@ const Parent = (() => {
       actions.appendChild(play);
     }
 
-    const del = el('button', 'btn btn--quiet btn--danger', 'Remove');
-    del.addEventListener('click', async () => {
-      if (!window.confirm('Remove "' + (task.label || 'this job') + '"?')) return;
-      await Store.removeTask(task.id);
-      render();
-    });
-    actions.appendChild(del);
-
     body.appendChild(actions);
     thumb.addEventListener('click', () => togglePicker(task, body));
     row.appendChild(body);
 
     const move = el('div', 'task-move');
     move.appendChild(moveButton(task, 'up', index === 0));
+    move.appendChild(removeButton(task));
     move.appendChild(moveButton(task, 'down', index === total - 1));
     row.appendChild(move);
 
@@ -245,6 +238,21 @@ const Parent = (() => {
       'stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     button.addEventListener('click', () => {
       Store.moveTask(task.id, up ? -1 : 1);
+      render();
+    });
+    return button;
+  }
+
+  function removeButton(task) {
+    const button = el('button', 'move-button move-button--remove');
+    button.type = 'button';
+    button.setAttribute('aria-label', 'Remove ' + (task.label || 'this job'));
+    button.innerHTML = '<svg viewBox="0 0 24 24" class="move-glyph" aria-hidden="true">' +
+      '<path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.6" ' +
+      'stroke-linecap="round"/></svg>';
+    button.addEventListener('click', async () => {
+      if (!window.confirm('Remove "' + (task.label || 'this job') + '"?')) return;
+      await Store.removeTask(task.id);
       render();
     });
     return button;
