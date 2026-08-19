@@ -85,7 +85,6 @@ const Kid = (() => {
     fillStars(el.weekStars, done.length, tasks.length);
 
     el.tileGrid.innerHTML = '';
-    el.tileGrid.style.gridTemplateColumns = 'repeat(' + (tasks.length <= 2 ? tasks.length || 1 : 2) + ', 1fr)';
 
     for (const task of tasks) {
       const count = Store.doneCount(task.id);
@@ -112,6 +111,39 @@ const Kid = (() => {
     const pending = tasks.filter(t => done.indexOf(t.id) < 0);
     el.goButton.hidden = pending.length === 0;
     show('start');
+    fitGrid(el.tileGrid, tasks.length);
+  }
+
+  /* Pick the column count that leaves the pictures closest to square in
+     whatever space this screen actually has. Two columns is right on a
+     portrait tablet and wrong on a phone lying on its side. */
+  function fitGrid(node, count) {
+    if (!node || !count) return;
+    const width = node.clientWidth;
+    const height = node.clientHeight;
+    if (!width || !height) return;
+    const gap = parseFloat(getComputedStyle(node).gap) || 0;
+
+    let best = 1;
+    let bestScore = Infinity;
+    for (let cols = 1; cols <= count; cols++) {
+      const rows = Math.ceil(count / cols);
+      const w = (width - gap * (cols - 1)) / cols;
+      const h = (height - gap * (rows - 1)) / rows;
+      if (w <= 0 || h <= 0) continue;
+      /* Squareness, plus a penalty for leaving a ragged last row: three
+         across with one stranded underneath reads worse than two by two
+         even when the shapes are closer to square. */
+      const stranded = cols * Math.ceil(count / cols) - count;
+      const score = Math.abs(Math.log(w / h)) + stranded * 0.35;
+      if (score < bestScore - 0.0001) { bestScore = score; best = cols; }
+    }
+    node.style.gridTemplateColumns = 'repeat(' + best + ', 1fr)';
+  }
+
+  function refit() {
+    fitGrid(el.tileGrid, el.tileGrid.children.length);
+    fitGrid(el.taskGrid, el.taskGrid.children.length);
   }
 
   function onTileTap(event) {
@@ -241,6 +273,7 @@ const Kid = (() => {
     el.timerWrap.classList.add('is-untimed');
     el.taskLabel.textContent = '';
     show('task');
+    fitGrid(el.taskGrid, session.queue.length);
   }
 
   function completeAll() {
@@ -390,6 +423,14 @@ const Kid = (() => {
     $('task-back').addEventListener('click', abortSession);
     $('replay-button').addEventListener('click', () => Chime.finish());
     bindRestWake();
+
+    let refitTimer = null;
+    const onResize = () => {
+      clearTimeout(refitTimer);
+      refitTimer = setTimeout(refit, 120);
+    };
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', onResize);
 
     return renderStart();
   }

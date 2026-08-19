@@ -96,6 +96,11 @@ There you can:
 Add it to the home screen and it opens portrait, full screen, with no address
 bar to wander out of.
 
+The layout follows the screen it is on: the pictures pick a column count that
+keeps them closest to square in the space available, and on a short landscape
+screen the job screen stands up in two columns so the big button stays on
+screen. Checked from a 320px phone up to a 1280px laptop, in both orientations.
+
 ## Backing it up, and moving it
 
 Both live under **Backup and moving** in the grown-up panel.

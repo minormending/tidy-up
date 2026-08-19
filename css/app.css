@@ -69,7 +69,9 @@ button {
 
 /* One card on a warm ground, rather than tiles bleeding to the bezel. */
 .panel {
-  width: min(100%, 560px);
+  /* Wide enough to use a tablet held upright; widened again in landscape,
+     where a fixed strip leaves most of the screen as margin. */
+  width: min(100%, 720px);
   height: 100%;
   max-height: 100%;
   display: flex;
@@ -269,6 +271,26 @@ button {
 .go-button[hidden] { display: none; }
 
 /* ---- task screen ---- */
+
+.task-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.6vh, 24px);
+}
+
+.task-side {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 2vh, 18px);
+  flex: none;
+}
 
 .timer-wrap {
   position: relative;
@@ -518,6 +540,43 @@ button {
 .parent-corner.is-holding .parent-ring-fill {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 1600ms linear;
+}
+
+/* ---- fitting the screen it is actually on ---- */
+
+/* A wide screen should be used, not left as margin either side. */
+@media (orientation: landscape) {
+  .panel { width: min(100%, 1040px); }
+  .screen--rest .panel { width: auto; max-width: min(100%, 1040px); }
+}
+
+/* Short and wide - a phone on its side, or a small laptop. Standing the
+   job screen up in two columns is what keeps the check button on screen;
+   stacked, it fell off the bottom. */
+@media (orientation: landscape) and (max-height: 620px) {
+  .screen { padding: clamp(8px, 1.6vh, 16px) clamp(10px, 2vw, 22px); }
+  .panel { padding: clamp(10px, 2vh, 18px) clamp(12px, 2vw, 22px); gap: clamp(8px, 1.6vh, 16px); }
+
+  .task-main {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(14px, 3vw, 30px);
+  }
+
+  .timer-wrap {
+    width: auto;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    flex: 0 0 auto;
+  }
+
+  .task-side { flex: 1 1 auto; width: auto; min-width: 0; }
+  .check-button { height: clamp(64px, 26vh, 110px); }
+  .task-grid { height: 100%; }
+  .go-button { width: clamp(64px, 22vh, 96px); height: clamp(64px, 22vh, 96px); }
+  .big-star { width: clamp(90px, 34vh, 150px); height: clamp(90px, 34vh, 150px); }
+  .replay-button { width: clamp(42px, 14vh, 60px); height: clamp(42px, 14vh, 60px); margin-top: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

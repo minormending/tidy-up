@@ -37,18 +37,22 @@
           <div class="progress-fill" id="progress-fill"></div>
         </div>
       </div>
-      <div class="timer-wrap" id="timer-wrap">
-        <svg class="timer-ring" viewBox="0 0 100 100" aria-hidden="true">
-          <circle class="ring-track" cx="50" cy="50" r="45"></circle>
-          <circle class="ring-fill" id="ring-fill" cx="50" cy="50" r="45"></circle>
-        </svg>
-        <button class="task-photo" id="task-photo" aria-label="Hear the job again"></button>
+      <div class="task-main">
+        <div class="timer-wrap" id="timer-wrap">
+          <svg class="timer-ring" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="ring-track" cx="50" cy="50" r="45"></circle>
+            <circle class="ring-fill" id="ring-fill" cx="50" cy="50" r="45"></circle>
+          </svg>
+          <button class="task-photo" id="task-photo" aria-label="Hear the job again"></button>
+        </div>
+        <div class="task-grid" id="task-grid" hidden></div>
+        <div class="task-side">
+          <p class="task-label" id="task-label"></p>
+          <button class="check-button" id="check-button" aria-label="Job done">
+            <svg viewBox="0 0 24 24" class="glyph" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
       </div>
-      <div class="task-grid" id="task-grid" hidden></div>
-      <p class="task-label" id="task-label"></p>
-      <button class="check-button" id="check-button" aria-label="Job done">
-        <svg viewBox="0 0 24 24" class="glyph" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
     </div>
   </section>
 
