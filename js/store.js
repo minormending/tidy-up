@@ -51,6 +51,7 @@ const Store = (() => {
   };
 
   let state = null;
+  let firstRun = false;
 
   function seedTasks(seconds) {
     return SEED.map(seed => ({
@@ -73,6 +74,8 @@ const Store = (() => {
   function load() {
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem(KEY)); } catch (err) { saved = null; }
+    /* Nothing stored yet means nobody has set this up on this device. */
+    firstRun = !saved;
     state = Object.assign({}, DEFAULTS, saved || {});
     if (!Array.isArray(state.tasks) || state.tasks.length === 0) {
       state.tasks = seedTasks(state.defaultSeconds);
@@ -108,6 +111,8 @@ const Store = (() => {
   }
 
   function get() { return state; }
+
+  function isFirstRun() { return firstRun; }
 
   function tasks() { return state.tasks; }
 
@@ -202,7 +207,7 @@ const Store = (() => {
   }
 
   return {
-    load, save, get, set, tasks, task,
+    load, save, get, set, tasks, task, isFirstRun,
     addTask, updateTask, removeTask, moveTask,
     awardStar, recordSession, resetStars,
     doneToday, markDone, clearToday,
