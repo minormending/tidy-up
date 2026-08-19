@@ -156,15 +156,10 @@ const Parent = (() => {
   async function taskRow(task, index, total) {
     const row = el('div', 'task-row');
 
-    const thumb = el('div', 'thumb');
-    const url = (await Media.url(task.photoId)) || task.seedPhoto;
-    if (url) {
-      thumb.style.backgroundImage = 'url("' + url + '")';
-    } else {
-      thumb.classList.add('is-icon');
-      thumb.style.backgroundColor = task.color || '#f1efe8';
-      thumb.innerHTML = Icons.svg(task.icon || 'star', Store.inkFor(task.color));
-    }
+    const thumb = el('button', 'thumb');
+    thumb.type = 'button';
+    thumb.setAttribute('aria-label', 'Change the picture for ' + (task.label || 'this job'));
+    paintThumb(thumb, task, (await Media.url(task.photoId)) || task.seedPhoto);
     row.appendChild(thumb);
 
     const body = el('div', 'task-body');
@@ -193,10 +188,6 @@ const Parent = (() => {
     body.appendChild(secs);
 
     const actions = el('div', 'btn-row');
-
-    const pick = el('button', 'btn btn--quiet', 'Picture');
-    pick.addEventListener('click', () => togglePicker(task, body, pick));
-    actions.appendChild(pick);
 
     const photoLabel = el('label', 'btn btn--quiet', task.photoId ? 'Change photo' : 'Add photo');
     const photoInput = document.createElement('input');
@@ -241,13 +232,34 @@ const Parent = (() => {
     actions.appendChild(del);
 
     body.appendChild(actions);
+    thumb.addEventListener('click', () => togglePicker(task, body));
     row.appendChild(body);
     return row;
   }
 
   /* ---- choosing a picture ---- */
 
-  function togglePicker(task, body, button) {
+  /* The thumbnail is the control, so it carries a small pencil to say so. */
+  function paintThumb(thumb, task, photoUrl) {
+    thumb.innerHTML = '';
+    thumb.classList.remove('is-icon');
+    thumb.style.backgroundImage = '';
+    thumb.style.backgroundColor = '';
+
+    if (photoUrl) {
+      thumb.style.backgroundImage = 'url("' + photoUrl + '")';
+    } else {
+      thumb.classList.add('is-icon');
+      thumb.style.backgroundColor = task.color || '#f1efe8';
+      thumb.innerHTML = Icons.svg(task.icon || 'star', Store.inkFor(task.color));
+    }
+
+    const badge = el('span', 'thumb-edit');
+    badge.innerHTML = Icons.svg('pencil', '#6f6a5e');
+    thumb.appendChild(badge);
+  }
+
+  function togglePicker(task, body) {
     const open = body.querySelector('.picture-picker');
     if (open) { open.remove(); return; }
     body.querySelectorAll('.picture-picker').forEach(n => n.remove());
@@ -346,10 +358,7 @@ const Parent = (() => {
     function repaint() {
       paintSwatches();
       paintResults();
-      if (thumb) {
-        thumb.style.backgroundColor = task.color || '#f1efe8';
-        thumb.innerHTML = Icons.svg(task.icon || 'star', ink());
-      }
+      if (thumb) paintThumb(thumb, task, null);
     }
 
     search.addEventListener('input', paintResults);

@@ -139,13 +139,19 @@ js/backup.js        backup files and setup codes
 js/qr.js            QR encoder
 sw.js               offline shell
 test/qr-test.js     checks the encoder against a reference implementation
+test/css-test.js    checks no styling has been deleted by accident
 ```
 
 ## Tests
 
 ```
-node test/qr-test.js
+node test/qr-test.js && node test/css-test.js
 ```
+
+`css-test.js` checks that every class the markup and scripts actually apply has
+a rule in the stylesheet. Editing that file by slicing between markers has
+twice silently deleted a whole section, so this guards against it.
+
 
 Compares every QR version (1-40), both error correction levels, and all eight
 mask patterns — 640 symbols — against matrices from the

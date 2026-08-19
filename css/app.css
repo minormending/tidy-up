@@ -582,7 +582,30 @@ button {
   border-radius: 12px;
   background: #f0ede4 center/cover no-repeat;
   border: 1px solid var(--hairline);
+  padding: 0;
+  cursor: pointer;
+  overflow: visible;
+  transition: transform 120ms ease, border-color 120ms ease;
 }
+
+.thumb:hover { border-color: #c4bda9; }
+.thumb:active { transform: scale(0.95); }
+
+.thumb-edit {
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb-edit .icon-svg { width: 56%; height: 56%; }
 
 .thumb.is-icon {
   display: flex;
@@ -672,6 +695,38 @@ button {
   border-color: var(--go);
   background: #f1f7ea;
 }
+
+/* ---- support levels and the run log ---- */
+
+.level {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  text-align: left;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 12px;
+  border: 1px solid var(--hairline);
+  background: #faf8f2;
+}
+
+.level.is-current { border-color: var(--go); background: #f1f7ea; }
+.level-title { font-size: 0.92rem; font-weight: 600; }
+.level-body { font-size: 0.82rem; color: #6f6a5e; line-height: 1.45; }
+
+.history { display: flex; flex-direction: column; gap: 0.3rem; }
+
+.history-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.85rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #f0ede4;
+}
+
+.history-line:last-child { border-bottom: none; }
 
 /* ---- backup, and an incoming setup code ---- */
 
