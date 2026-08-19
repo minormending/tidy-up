@@ -296,9 +296,34 @@ const Kid = (() => {
     fillStars(el.sessionStars, earned, Math.max(earned, 1));
     show('done');
     Chime.finish();
-    /* The app puts itself away. There is nothing to play with afterwards. */
+    /* The app settles into a record of the day. Still nothing to play
+       with - nothing on it responds to a tap - but a blank screen reads
+       as broken, and the day is worth showing. */
     clearTimeout(restTimer);
-    restTimer = setTimeout(() => show('rest'), REST_AFTER_MS);
+    restTimer = setTimeout(() => { renderRest().then(() => show('rest')); }, REST_AFTER_MS);
+  }
+
+  async function renderRest() {
+    const tasks = Store.tasks();
+    const counts = Store.doneCounts();
+    const distinct = tasks.filter(t => (counts[t.id] || 0) > 0).length;
+    fillStars(el.restStars, distinct, tasks.length);
+
+    el.restJobs.innerHTML = '';
+    for (const task of tasks) {
+      const cell = document.createElement('div');
+      cell.className = 'rest-job';
+
+      const picture = document.createElement('span');
+      picture.className = 'tile-picture';
+      await paintPicture(picture, task);
+      cell.appendChild(picture);
+
+      const count = counts[task.id] || 0;
+      if (count) cell.insertAdjacentHTML('beforeend', badgeMarkup(count));
+
+      el.restJobs.appendChild(cell);
+    }
   }
 
   /* ---- voice prompts ---- */
@@ -354,6 +379,8 @@ const Kid = (() => {
     el.progressFill = $('progress-fill');
     el.sessionStars = $('session-stars');
     el.taskLabel = $('task-label');
+    el.restStars = $('rest-stars');
+    el.restJobs = $('rest-jobs');
 
     el.tileGrid.addEventListener('click', onTileTap);
     el.goButton.addEventListener('click', onGo);
@@ -367,5 +394,5 @@ const Kid = (() => {
     return renderStart();
   }
 
-  return { init, renderStart, show };
+  return { init, renderStart, renderRest, show };
 })();

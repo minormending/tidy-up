@@ -20,9 +20,12 @@ today again" in the panel starts the whole round over.
 enormous check button. Nothing else on screen is tappable. Tapping the
 picture replays the recorded instruction.
 
-**Done.** A star, one short sound, and then the app puts itself away. Waking
-it takes a deliberate long press, so there is nothing here to play with once
-the tidying is finished.
+**Done.** A star and one short sound, and then the app settles into a quiet
+record of the day: a filled star for each job, and every job's picture with the
+number of times it was done. Nothing on that screen responds to a tap, and
+waking it takes a deliberate long press — so there is nothing left to play with
+once the tidying is finished, but the day is still shown rather than the screen
+going blank.
 
 ## Why it is built this way
 

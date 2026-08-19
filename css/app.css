@@ -216,22 +216,34 @@ button {
    still look like something worth pressing. */
 .tile.is-done { opacity: 0.78; }
 
+/* The badge is sized from the picture it sits on, and clips rather than
+   stretching: a two-digit count must not turn the circle into an oval. */
 .tile-badge {
   position: absolute;
   right: 6%;
   top: 6%;
   width: 22%;
+  min-width: 18px;
   aspect-ratio: 1;
+  min-height: 0;
+  overflow: hidden;
   border-radius: 50%;
   background: var(--go);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(13px, 3.2vh, 26px);
+  font-size: clamp(12px, 2.4vh, 20px);
   font-weight: 600;
   line-height: 1;
   z-index: 1;
+}
+
+/* The day's record uses much smaller pictures than the picking screen. */
+.rest-job .tile-badge {
+  width: 34%;
+  min-width: 16px;
+  font-size: clamp(9px, 1.5vh, 13px);
 }
 
 .tile-badge-glyph { width: 60%; height: 60%; display: block; }
@@ -415,12 +427,36 @@ button {
 
 .screen--rest { background: #efece3; }
 
-.rest-mark {
-  width: clamp(50px, 11vh, 90px);
-  height: clamp(50px, 11vh, 90px);
-  border-radius: 50%;
-  background: var(--dim);
-  opacity: 0.45;
+/* A small card holding the day, not a full-height one mostly empty. */
+.screen--rest .panel {
+  height: auto;
+  padding: clamp(20px, 4vh, 34px) clamp(20px, 4vw, 36px);
+  gap: clamp(16px, 3vh, 26px);
+}
+
+/* The day's record: the jobs, how many times each was done, and the row
+   of stars. Nothing here responds to a tap. */
+.rest-jobs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(10px, 2.4vw, 20px);
+  max-width: 100%;
+}
+
+.rest-job {
+  position: relative;
+  width: clamp(56px, 13vw, 96px);
+  aspect-ratio: 1;
+  flex: none;
+}
+
+.rest-job .tile-picture {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--round);
+  overflow: hidden;
+  opacity: 0.85;
 }
 
 /* ---- grown-up entry ---- */
