@@ -43,7 +43,8 @@ const Store = (() => {
     stars: 0,
     weekStart: 0,
     weeks: [],
-    sessions: []
+    sessions: [],
+    done: null
   };
 
   let state = null;
@@ -168,6 +169,29 @@ const Store = (() => {
     save();
   }
 
+  /* Which jobs are already finished today, so a tile can show a tick and
+     cannot be run twice for another star. Clears itself at midnight. */
+  function today() {
+    const d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+  }
+
+  function doneToday() {
+    if (!state.done || state.done.date !== today()) return [];
+    return state.done.ids;
+  }
+
+  function markDone(id) {
+    if (!state.done || state.done.date !== today()) state.done = { date: today(), ids: [] };
+    if (state.done.ids.indexOf(id) < 0) state.done.ids.push(id);
+    save();
+  }
+
+  function clearToday() {
+    state.done = { date: today(), ids: [] };
+    save();
+  }
+
   function resetStars() {
     state.stars = 0;
     state.weekStart = startOfWeek(Date.now());
@@ -178,6 +202,7 @@ const Store = (() => {
     load, save, get, set, tasks, task,
     addTask, updateTask, removeTask, moveTask,
     awardStar, recordSession, resetStars,
+    doneToday, markDone, clearToday,
     seedTasks, WEEK_MS
   };
 })();

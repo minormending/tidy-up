@@ -10,6 +10,7 @@
   --dim: #cfcabd;
   --pad: clamp(12px, 3vw, 28px);
   --gap: clamp(10px, 2.4vw, 20px);
+  --round: clamp(14px, 3vw, 26px);
 }
 
 * { box-sizing: border-box; }
@@ -37,15 +38,22 @@ button {
   padding: 0;
   cursor: pointer;
   touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.glyph { width: 100%; height: 100%; fill: currentColor; display: block; }
+/* Icons are sized against their own button, never with percentage padding:
+   percentage padding resolves against the containing block and blows a
+   flex item straight past its own width. */
+.glyph { display: block; fill: currentColor; width: 50%; height: 50%; }
 
 #app {
   position: relative;
   height: 100dvh;
   min-height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
 .screen {
@@ -54,6 +62,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: max(var(--pad), env(safe-area-inset-top)) var(--pad) max(var(--pad), env(safe-area-inset-bottom));
   gap: var(--gap);
 }
@@ -67,21 +76,24 @@ button {
   justify-content: center;
   flex-wrap: wrap;
   gap: clamp(5px, 1.4vw, 10px);
-  min-height: 1px;
+  flex: none;
+  max-width: 100%;
 }
 
 .star-slot {
-  width: clamp(22px, 5vw, 34px);
-  height: clamp(22px, 5vw, 34px);
+  width: clamp(20px, 4.4vw, 32px);
+  height: clamp(20px, 4.4vw, 32px);
+  flex: none;
   border-radius: 50%;
   background: var(--surface);
   border: 2px solid var(--hairline);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 18%;
   color: transparent;
 }
+
+.star-slot .glyph { width: 64%; height: 64%; }
 
 .star-slot.is-filled {
   background: var(--star-soft);
@@ -90,79 +102,85 @@ button {
 }
 
 .stars-row--big .star-slot {
-  width: clamp(34px, 8vw, 52px);
-  height: clamp(34px, 8vw, 52px);
+  width: clamp(32px, 7vw, 50px);
+  height: clamp(32px, 7vw, 50px);
 }
 
 /* ---- start screen ---- */
 
 .tile-grid {
-  flex: 1;
-  width: 100%;
-  max-width: min(78vh, 100%);
+  flex: 1 1 auto;
+  min-height: 0;
+  width: min(100%, 78vh);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr;
   gap: var(--gap);
-  align-content: center;
 }
 
 .tile {
   position: relative;
-  aspect-ratio: 1;
-  border-radius: clamp(14px, 3vw, 26px);
+  min-height: 0;
+  min-width: 0;
+  border-radius: var(--round);
   background: var(--surface) center/cover no-repeat;
-  border: 3px solid transparent;
+  border: none;
   overflow: hidden;
   transition: transform 120ms ease;
+  display: block;
 }
 
 .tile:active { transform: scale(0.96); }
 
-.tile.is-done { opacity: 0.4; }
+.tile.is-done { opacity: 0.42; }
 
 .tile-check {
   position: absolute;
-  inset: auto 8% 8% auto;
-  width: 26%;
+  right: 7%;
+  bottom: 7%;
+  width: 24%;
+  height: auto;
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--go);
   color: #fff;
   padding: 5%;
   display: none;
+  overflow: visible;
 }
 
 .tile.is-done .tile-check { display: block; }
 
 .go-button {
-  width: clamp(84px, 17vh, 128px);
-  aspect-ratio: 1;
+  width: clamp(84px, 15vh, 124px);
+  height: clamp(84px, 15vh, 124px);
+  flex: none;
   border-radius: 50%;
   background: var(--go);
   color: #fff;
-  padding: 22%;
-  flex: none;
   box-shadow: 0 4px 0 var(--go-deep);
   transition: transform 100ms ease, box-shadow 100ms ease;
 }
+
+.go-button .glyph { width: 48%; height: 48%; margin-left: 6%; }
 
 .go-button:active {
   transform: translateY(4px);
   box-shadow: 0 0 0 var(--go-deep);
 }
 
+.go-button[hidden] { display: none; }
+
 /* ---- task screen ---- */
 
 .timer-wrap {
   position: relative;
-  flex: 1;
-  min-height: 0;
+  flex: 0 1 auto;
+  width: min(100%, 58vh);
   aspect-ratio: 1;
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
+
+.timer-wrap[hidden] { display: none; }
 
 .timer-ring {
   position: absolute;
@@ -186,25 +204,45 @@ button {
   stroke-linecap: round;
   stroke-dasharray: 283;
   stroke-dashoffset: 0;
+  transition: stroke 300ms ease;
 }
 
 .ring-fill.is-low { stroke: #d8752f; }
 
 .task-photo {
   position: absolute;
-  inset: 11%;
+  inset: 10%;
   border-radius: 50%;
   background: var(--surface) center/cover no-repeat;
   overflow: hidden;
+  display: block;
 }
 
 .timer-wrap.is-untimed .task-photo { inset: 0; }
 
-.task-photo:active { transform: scale(0.98); }
+.task-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: min(100%, 78vh);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr;
+  gap: var(--gap);
+}
+
+.task-grid[hidden] { display: none; }
+
+.task-cell {
+  min-height: 0;
+  min-width: 0;
+  border-radius: var(--round);
+  background: var(--surface) center/cover no-repeat;
+  display: block;
+}
 
 .progress-track {
   width: min(100%, 520px);
-  height: clamp(8px, 1.6vh, 14px);
+  height: clamp(8px, 1.4vh, 14px);
   border-radius: 999px;
   background: var(--hairline);
   overflow: hidden;
@@ -221,15 +259,16 @@ button {
 
 .check-button {
   width: min(100%, 520px);
-  height: clamp(88px, 16vh, 132px);
-  border-radius: clamp(16px, 3vw, 26px);
+  height: clamp(84px, 15vh, 128px);
+  flex: none;
+  border-radius: var(--round);
   background: var(--go);
   color: #fff;
-  padding: clamp(18px, 3.5vh, 34px);
-  flex: none;
   box-shadow: 0 5px 0 var(--go-deep);
   transition: transform 100ms ease, box-shadow 100ms ease;
 }
+
+.check-button .glyph { width: clamp(42px, 8vh, 66px); height: clamp(42px, 8vh, 66px); }
 
 .check-button:active {
   transform: translateY(5px);
@@ -238,17 +277,20 @@ button {
 
 /* ---- done screen ---- */
 
-#screen-done { justify-content: center; }
-
 .big-star {
-  width: clamp(120px, 30vh, 220px);
-  aspect-ratio: 1;
+  width: clamp(120px, 28vh, 220px);
+  height: clamp(120px, 28vh, 220px);
+  flex: none;
   border-radius: 50%;
   background: var(--star-soft);
   color: var(--star);
-  padding: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   animation: pop 420ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
 }
+
+.big-star .glyph { width: 58%; height: 58%; }
 
 @keyframes pop {
   from { transform: scale(0.3); opacity: 0; }
@@ -256,26 +298,25 @@ button {
 }
 
 .replay-button {
-  width: clamp(52px, 10vh, 72px);
-  aspect-ratio: 1;
+  width: clamp(52px, 9vh, 72px);
+  height: clamp(52px, 9vh, 72px);
+  flex: none;
   border-radius: 50%;
   background: var(--surface);
   border: 2px solid var(--hairline);
   color: #8a857a;
-  padding: 24%;
   margin-top: var(--gap);
 }
 
+.replay-button .glyph { width: 52%; height: 52%; }
+
 /* ---- resting screen ---- */
 
-.screen--rest {
-  justify-content: center;
-  background: #efece3;
-}
+.screen--rest { background: #efece3; }
 
 .rest-mark {
-  width: clamp(50px, 12vh, 90px);
-  aspect-ratio: 1;
+  width: clamp(50px, 11vh, 90px);
+  height: clamp(50px, 11vh, 90px);
   border-radius: 50%;
   background: var(--dim);
   opacity: 0.45;
