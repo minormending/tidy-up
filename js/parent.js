@@ -29,8 +29,14 @@ const Parent = (() => {
   function bindCorner() {
     const corner = $('parent-corner');
     let timer = null;
-    const begin = () => { timer = setTimeout(open, HOLD_MS); };
-    const cancel = () => { clearTimeout(timer); };
+    const begin = () => {
+      corner.classList.add('is-holding');
+      timer = setTimeout(open, HOLD_MS);
+    };
+    const cancel = () => {
+      corner.classList.remove('is-holding');
+      clearTimeout(timer);
+    };
     corner.addEventListener('pointerdown', begin);
     corner.addEventListener('pointerup', cancel);
     corner.addEventListener('pointercancel', cancel);
@@ -38,6 +44,7 @@ const Parent = (() => {
   }
 
   function open() {
+    $('parent-corner').classList.remove('is-holding');
     render();
     Kid.show('parent');
     $('parent-corner').hidden = true;

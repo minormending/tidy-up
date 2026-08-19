@@ -406,6 +406,9 @@ button {
 
 /* ---- grown-up entry ---- */
 
+/* The way in for a grown-up. The dot is faint enough that the child has
+   no reason to press it, and a press alone does nothing - it takes a
+   deliberate hold, which the dot grows to acknowledge. */
 .parent-corner {
   position: fixed;
   top: 0;
@@ -414,7 +417,28 @@ button {
   height: 68px;
   z-index: 40;
   background: transparent;
+  -webkit-touch-callout: none;
 }
+
+.parent-corner::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d5cfbf;
+  transition: transform 220ms ease, background-color 220ms ease;
+}
+
+.parent-corner.is-holding::after {
+  transform: scale(2.3);
+  background: #a9a291;
+  transition: transform 1600ms linear, background-color 1600ms linear;
+}
+
+.parent-corner[hidden] { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
