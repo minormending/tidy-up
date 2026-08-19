@@ -3,6 +3,7 @@
   function boot() {
     Store.load();
     Kid.init();
+    Parent.init();
   }
 
   document.addEventListener('gesturestart', e => e.preventDefault());

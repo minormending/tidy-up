@@ -49,6 +49,61 @@
     </button>
   </section>
 
+
+  <section class="screen screen--parent" id="screen-parent" data-screen="parent" hidden>
+    <div class="sheet">
+
+      <header class="sheet-head">
+        <h1>Grown-up settings</h1>
+        <button class="btn btn--plain" id="parent-close">Done</button>
+      </header>
+
+      <section class="block">
+        <h2>Jobs</h2>
+        <p class="hint">Photograph the real bin or shelf, and record the instruction in your own voice. Both stay on this device &mdash; nothing is uploaded.</p>
+        <div id="task-list"></div>
+        <button class="btn" id="add-task">Add a job</button>
+      </section>
+
+      <section class="block">
+        <h2>How much help</h2>
+        <p class="hint">Step this down as he needs it less. A system with no exit becomes permanent scaffolding.</p>
+        <div id="level-list"></div>
+        <p class="nudge" id="fade-nudge" hidden></p>
+      </section>
+
+      <section class="block">
+        <h2>Timer and sound</h2>
+        <label class="field">
+          <span>Default timer for a new job: <b id="seconds-out">150</b>s</span>
+          <input type="range" id="default-seconds" min="30" max="600" step="15" value="150">
+        </label>
+        <p class="hint">Set this from what he can actually sustain, not from what sounds reasonable. A timer he keeps failing is training failure.</p>
+        <label class="field field--row">
+          <input type="checkbox" id="chime-toggle" checked>
+          <span>Play the little tones</span>
+        </label>
+      </section>
+
+      <section class="block">
+        <h2>Stars</h2>
+        <p class="stat" id="star-summary"></p>
+        <div id="week-history" class="history"></div>
+        <div class="btn-row">
+          <button class="btn btn--quiet" id="reset-today">Let him do today again</button>
+          <button class="btn btn--quiet" id="reset-stars">Clear this week</button>
+        </div>
+        <p class="hint">Nothing in the app ever takes a star away. Clearing is a grown-up action, on purpose.</p>
+      </section>
+
+      <section class="block">
+        <h2>Recent runs</h2>
+        <div id="session-log" class="history"></div>
+      </section>
+
+    </div>
+  </section>
+
   <section class="screen screen--rest" id="screen-rest" data-screen="rest" hidden>
     <div class="rest-mark" aria-hidden="true"></div>
   </section>
@@ -61,6 +116,7 @@
 <script src="js/store.js"></script>
 <script src="js/chime.js"></script>
 <script src="js/kid.js"></script>
+<script src="js/parent.js"></script>
 <script src="js/app.js"></script>
 
 </body>
