@@ -74,7 +74,9 @@ for about 1.6 seconds and the grown-up panel opens — the dot grows while you
 hold, so you can tell it is working. A plain tap does nothing, which is why a
 five-year-old does not get in by accident. There you can:
 
-- name each job, photograph the real bin or shelf, and record the instruction
+- name each job, pick its icon and colour (the picker has a search box — try
+  "bin", "ball", "bag", "pet"), photograph the real bin or shelf, and record the
+  instruction
 - set the timer per job — from what he can actually sustain, not from what
   sounds reasonable to an adult
 - choose the support level, and see whether the recent runs justify stepping

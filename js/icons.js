@@ -91,6 +91,81 @@ const Icons = (() => {
     { title: 'Marks', items: [['star', 'Star'], ['heart', 'Heart'], ['sparkle', 'Sparkle'], ['moon', 'Moon']] }
   ];
 
+  /* Everyday words for each shape, so searching finds an icon by what
+     the thing is called rather than by its Phosphor name. */
+  const ALIASES = {
+    'airplane': 'plane flying vehicle toy',
+    'armchair': 'sofa couch seat',
+    'backpack': 'bag school rucksack',
+    'balloon': 'party',
+    'baseball': 'ball sport',
+    'baseball-cap': 'hat cap clothes',
+    'basket': 'laundry washing hamper',
+    'basketball': 'ball sport',
+    'bathtub': 'bath bathroom washing',
+    'bed': 'bedroom sleep',
+    'bicycle': 'bike outside',
+    'bird': 'pet animal',
+    'boat': 'ship sailing vehicle toy',
+    'book': 'reading story',
+    'book-open': 'reading story',
+    'books': 'reading story shelf',
+    'bowl-food': 'bowl cereal food dish',
+    'broom': 'sweep sweeping cleaning',
+    'butterfly': 'bug insect animal',
+    'cake': 'birthday food pudding',
+    'car': 'vehicle toy',
+    'cat': 'kitten pet animal',
+    'chair': 'seat',
+    'coffee': 'cup mug drink',
+    'confetti': 'party',
+    'cookie': 'biscuit snack food',
+    'cube': 'block brick lego toy box',
+    'dice-five': 'dice game toy',
+    'dog': 'puppy pet animal',
+    'fish': 'pet animal',
+    'flower': 'garden outside nature',
+    'football': 'rugby ball sport',
+    'fork-knife': 'plate dinner meal food cutlery',
+    'game-controller': 'console video toy',
+    'gift': 'present birthday party',
+    'hand-soap': 'soap wash bathroom',
+    'heart': 'love',
+    'horse': 'pony animal',
+    'lamp': 'light',
+    'leaf': 'leaves garden outside nature',
+    'moon': 'night sky',
+    'notebook': 'notes writing paper',
+    'package': 'box parcel',
+    'paint-brush': 'paint painting art',
+    'paint-bucket': 'paint pot art',
+    'palette': 'paint art colours colors',
+    'pants': 'trousers clothes clothing',
+    'paw-print': 'paw pet animal',
+    'pencil': 'writing drawing crayon',
+    'puzzle-piece': 'jigsaw toy',
+    'rabbit': 'bunny pet animal',
+    'robot': 'toy',
+    'rocket': 'space vehicle toy',
+    'ruler': 'measure school',
+    'scissors': 'cutting craft',
+    'shapes': 'shape',
+    'shopping-bag': 'bag shopping',
+    'sneaker': 'shoe shoes trainers boots clothes',
+    'soccer-ball': 'ball sport',
+    'sparkle': 'sparkles magic shiny',
+    'stack': 'pile layers',
+    'star': 'stars',
+    'sun': 'sunny outside weather',
+    't-shirt': 'shirt top clothes clothing',
+    'toolbox': 'tools',
+    'tooth': 'teeth toothbrush brush bathroom',
+    'tote': 'bag',
+    'train': 'railway vehicle toy',
+    'trash': 'bin rubbish waste litter',
+    'tree': 'garden outside nature'
+  };
+
   function has(name) { return Object.prototype.hasOwnProperty.call(PATHS, name); }
 
   function label(name) {
@@ -98,6 +173,25 @@ const Icons = (() => {
       for (const item of group.items) if (item[0] === name) return item[1];
     }
     return name;
+  }
+
+  function haystack(name) {
+    return (name.replace(/-/g, ' ') + ' ' + label(name) + ' ' + (ALIASES[name] || '')).toLowerCase();
+  }
+
+  /* Every word in the query has to match, so "red ball" narrows rather
+     than widens. Results keep the order the groups are listed in. */
+  function search(query) {
+    const words = String(query || '').toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return [];
+    const found = [];
+    GROUPS.forEach(group => {
+      group.items.forEach(item => {
+        const hay = haystack(item[0]);
+        if (words.every(word => hay.indexOf(word) >= 0)) found.push(item[0]);
+      });
+    });
+    return found;
   }
 
   /* Returns markup rather than a node so it can be dropped straight into
@@ -110,7 +204,7 @@ const Icons = (() => {
 
   function names() { return Object.keys(PATHS); }
 
-  return { svg, has, label, names, GROUPS };
+  return { svg, has, label, names, search, GROUPS };
 })();
 
 if (typeof module !== 'undefined' && module.exports) module.exports = Icons;

@@ -268,41 +268,93 @@ const Parent = (() => {
       return;
     }
 
+    const thumb = body.parentElement ? body.parentElement.querySelector('.thumb') : null;
+
     /* Colour first: with one-colour icons it is doing as much work as the
        shape in telling one tile from another. */
     picker.appendChild(el('p', 'picker-heading', 'Colour'));
     const swatches = el('div', 'swatch-row');
-    Store.PALETTE.forEach(pair => {
-      const swatch = el('button', 'swatch' + (pair.bg === task.color ? ' is-current' : ''));
-      swatch.style.backgroundColor = pair.bg;
-      swatch.innerHTML = Icons.svg(task.icon || 'star', pair.ink);
-      swatch.setAttribute('aria-label', 'Use this colour');
-      swatch.addEventListener('click', () => {
-        Store.updateTask(task.id, { color: pair.bg });
-        render();
-      });
-      swatches.appendChild(swatch);
-    });
     picker.appendChild(swatches);
 
-    const ink = Store.inkFor(task.color);
-    Icons.GROUPS.forEach(group => {
-      picker.appendChild(el('p', 'picker-heading', group.title));
-      const grid = el('div', 'icon-grid');
-      group.items.forEach(item => {
-        const name = item[0];
-        const cell = el('button', 'icon-cell' + (name === task.icon ? ' is-current' : ''));
-        cell.innerHTML = Icons.svg(name, ink);
-        cell.title = item[1];
-        cell.setAttribute('aria-label', item[1]);
-        cell.addEventListener('click', () => {
-          Store.updateTask(task.id, { icon: name });
-          render();
-        });
-        grid.appendChild(cell);
+    const search = document.createElement('input');
+    search.type = 'search';
+    search.className = 'input icon-search';
+    search.placeholder = 'Search icons \u2014 try bin, ball, bag';
+    search.setAttribute('aria-label', 'Search icons');
+    picker.appendChild(search);
+
+    const results = el('div', 'icon-results');
+    picker.appendChild(results);
+
+    function ink() { return Store.inkFor(task.color); }
+
+    function iconCell(name) {
+      const text = Icons.label(name);
+      const cell = el('button', 'icon-cell' + (name === task.icon ? ' is-current' : ''));
+      cell.innerHTML = Icons.svg(name, ink());
+      cell.title = text;
+      cell.setAttribute('aria-label', text);
+      cell.addEventListener('click', () => {
+        Store.updateTask(task.id, { icon: name });
+        repaint();
       });
-      picker.appendChild(grid);
-    });
+      return cell;
+    }
+
+    function paintSwatches() {
+      swatches.innerHTML = '';
+      Store.PALETTE.forEach(pair => {
+        const swatch = el('button', 'swatch' + (pair.bg === task.color ? ' is-current' : ''));
+        swatch.style.backgroundColor = pair.bg;
+        swatch.innerHTML = Icons.svg(task.icon || 'star', pair.ink);
+        swatch.setAttribute('aria-label', 'Use this colour');
+        swatch.addEventListener('click', () => {
+          Store.updateTask(task.id, { color: pair.bg });
+          repaint();
+        });
+        swatches.appendChild(swatch);
+      });
+    }
+
+    function paintResults() {
+      const query = search.value.trim();
+      results.innerHTML = '';
+
+      if (!query) {
+        Icons.GROUPS.forEach(group => {
+          results.appendChild(el('p', 'picker-heading', group.title));
+          const grid = el('div', 'icon-grid');
+          group.items.forEach(item => grid.appendChild(iconCell(item[0])));
+          results.appendChild(grid);
+        });
+        return;
+      }
+
+      const found = Icons.search(query);
+      if (!found.length) {
+        results.appendChild(el('p', 'hint', 'Nothing matches that. Try a plainer word \u2014 bin, ball, bag, pet.'));
+        return;
+      }
+      results.appendChild(el('p', 'picker-heading', found.length === 1 ? '1 match' : found.length + ' matches'));
+      const grid = el('div', 'icon-grid');
+      found.forEach(name => grid.appendChild(iconCell(name)));
+      results.appendChild(grid);
+    }
+
+    /* Repaint in place rather than re-rendering the whole job list, so
+       choosing a colour does not shut the picker or wipe the search. */
+    function repaint() {
+      paintSwatches();
+      paintResults();
+      if (thumb) {
+        thumb.style.backgroundColor = task.color || '#f1efe8';
+        thumb.innerHTML = Icons.svg(task.icon || 'star', ink());
+      }
+    }
+
+    search.addEventListener('input', paintResults);
+    search.addEventListener('search', paintResults);
+    repaint();
 
     body.appendChild(picker);
     picker.scrollIntoView({ block: 'nearest' });

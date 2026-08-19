@@ -635,6 +635,22 @@ button {
 .swatch .icon-svg { width: 52%; height: 52%; }
 .swatch.is-current { border-color: var(--ink); }
 
+/* Stays put while the results scroll under it. */
+.icon-search {
+  position: sticky;
+  top: -0.75rem;
+  z-index: 1;
+  width: 100%;
+  margin: 0.35rem 0 0.1rem;
+  background: var(--surface);
+}
+
+.icon-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
 .icon-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
