@@ -4,6 +4,14 @@ const Parent = (() => {
   const MAX_AUDIO_MS = 12000;
   const PHOTO_MAX = 720;
 
+  const EMOJI = [
+    '\u{1F9F1}', '\u{1F9F8}', '\u{1F4DA}', '\u{1F9E9}', '\u{1F3A8}', '\u{270F}\u{FE0F}', '\u{1F58D}\u{FE0F}', '\u{1F3B2}',
+    '\u{1F455}', '\u{1F456}', '\u{1F9E6}', '\u{1F45F}', '\u{1F9E2}', '\u{1F392}', '\u{1F9FA}', '\u{1F6CF}\u{FE0F}',
+    '\u{1F697}', '\u{1F682}', '\u{2708}\u{FE0F}', '\u{1F6F4}', '\u{26BD}', '\u{1F3C0}', '\u{1FA81}', '\u{1F996}',
+    '\u{1F37D}\u{FE0F}', '\u{1F964}', '\u{1F9F4}', '\u{1FAA5}', '\u{1F9F9}', '\u{1F9FD}', '\u{1FAA3}', '\u{1F5D1}\u{FE0F}',
+    '\u{1F4E6}', '\u{1F5C3}\u{FE0F}', '\u{1F3B8}', '\u{1F941}', '\u{1F9F8}', '\u{1F43B}', '\u{2B50}', '\u{1F31F}'
+  ];
+
   const LEVELS = [
     { n: 1, title: 'Full help', body: 'One picture, your voice plays on its own, timer running.' },
     { n: 2, title: 'Voice on request', body: 'Picture and timer. He taps the picture if he wants to hear you.' },
@@ -158,8 +166,13 @@ const Parent = (() => {
 
     const thumb = el('div', 'thumb');
     const url = (await Media.url(task.photoId)) || task.seedPhoto;
-    if (url) thumb.style.backgroundImage = 'url("' + url + '")';
-    if (!task.photoId) thumb.appendChild(el('span', 'thumb-tag', 'placeholder'));
+    if (url) {
+      thumb.style.backgroundImage = 'url("' + url + '")';
+    } else {
+      thumb.classList.add('is-emoji');
+      thumb.style.backgroundColor = task.color || '#f1efe8';
+      thumb.textContent = task.emoji || '';
+    }
     row.appendChild(thumb);
 
     const body = el('div', 'task-body');
@@ -188,6 +201,10 @@ const Parent = (() => {
     body.appendChild(secs);
 
     const actions = el('div', 'btn-row');
+
+    const pick = el('button', 'btn btn--quiet', task.photoId ? 'Picture' : 'Picture ' + (task.emoji || ''));
+    pick.addEventListener('click', () => togglePicker(task, body, pick));
+    actions.appendChild(pick);
 
     const photoLabel = el('label', 'btn btn--quiet', task.photoId ? 'Change photo' : 'Add photo');
     const photoInput = document.createElement('input');
@@ -234,6 +251,74 @@ const Parent = (() => {
     body.appendChild(actions);
     row.appendChild(body);
     return row;
+  }
+
+  /* ---- choosing a picture ---- */
+
+  function togglePicker(task, body, button) {
+    const open = body.querySelector('.emoji-picker');
+    if (open) { open.remove(); return; }
+    body.querySelectorAll('.emoji-picker').forEach(n => n.remove());
+
+    const picker = el('div', 'emoji-picker');
+
+    if (task.photoId) {
+      const note = el('p', 'hint', 'A photo of the real bin is being used. Remove it to go back to a symbol.');
+      picker.appendChild(note);
+      const drop = el('button', 'btn btn--quiet', 'Remove the photo');
+      drop.addEventListener('click', async () => {
+        await Media.remove(task.photoId);
+        Store.updateTask(task.id, { photoId: null });
+        render();
+      });
+      picker.appendChild(drop);
+      body.appendChild(picker);
+      return;
+    }
+
+    const grid = el('div', 'emoji-grid');
+    EMOJI.forEach(glyph => {
+      const cell = el('button', 'emoji-cell' + (glyph === task.emoji ? ' is-current' : ''), glyph);
+      cell.setAttribute('aria-label', 'Use ' + glyph);
+      cell.addEventListener('click', () => {
+        Store.updateTask(task.id, { emoji: glyph });
+        render();
+      });
+      grid.appendChild(cell);
+    });
+    picker.appendChild(grid);
+
+    const own = el('label', 'field field--row');
+    own.appendChild(el('span', null, 'Or type one'));
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'input input--emoji';
+    input.value = task.emoji || '';
+    input.setAttribute('inputmode', 'text');
+    input.addEventListener('change', () => {
+      const glyph = firstGlyph(input.value);
+      if (glyph) {
+        Store.updateTask(task.id, { emoji: glyph });
+        render();
+      }
+    });
+    own.appendChild(input);
+    picker.appendChild(own);
+
+    body.appendChild(picker);
+    input.focus();
+  }
+
+  /* One symbol, not a sentence. Keeps flags and other joined sequences
+     whole where the browser can segment them. */
+  function firstGlyph(value) {
+    const text = (value || '').trim();
+    if (!text) return '';
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+      const parts = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text);
+      for (const part of parts) return part.segment;
+    }
+    return Array.from(text).slice(0, 2).join('');
   }
 
   /* ---- the fading ladder ---- */

@@ -176,6 +176,23 @@ button {
   background: transparent center/cover no-repeat;
 }
 
+.tile-picture.is-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(36px, 11vh, 96px);
+  line-height: 1;
+  overflow: hidden;
+}
+
+.task-photo.is-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(64px, 19vh, 168px);
+  line-height: 1;
+}
+
 /* Small on purpose: the picture is what the child reads, the word is
    there so the grown-ups say the same thing every time. */
 .tile-label {
@@ -570,17 +587,50 @@ button {
   border: 1px solid var(--hairline);
 }
 
-.thumb-tag {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  font-size: 0.6rem;
+.thumb.is-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  line-height: 1;
+}
+
+/* ---- choosing a picture ---- */
+
+.emoji-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.7rem;
+  background: #faf8f2;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: 6px;
+}
+
+.emoji-cell {
+  aspect-ratio: 1;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--surface);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.emoji-cell:active { background: #efece3; }
+.emoji-cell.is-current { border-color: var(--go); background: #f1f7ea; }
+
+.input--emoji {
+  width: 5.5rem;
+  flex: none;
   text-align: center;
-  padding: 2px 0;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 0 0 11px 11px;
-  color: #6f6a5e;
+  font-size: 1.35rem;
 }
 
 .level {

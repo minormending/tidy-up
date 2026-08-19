@@ -4,37 +4,15 @@ const Store = (() => {
   const KEY = 'tidyup.v1';
   const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-  /* The shape is scaled well inside its square so that cropping the
-     placeholder to a non-square tile never clips it. */
-  function picture(bg, ink, shapes) {
-    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
-      '<rect width="100" height="100" fill="' + bg + '"/>' +
-      '<g fill="' + ink + '" transform="translate(50,50) scale(0.66) translate(-50,-50)">' +
-      shapes + '</g></svg>';
-    return 'data:image/svg+xml,' + encodeURIComponent(svg);
-  }
+  /* Soft tile backgrounds, assigned when a job is created so that
+     reordering the list does not shuffle the colours. */
+  const COLORS = ['#e6f1fb', '#eeedfe', '#e1f5ee', '#faece7', '#fbeeda', '#eaf3de', '#fcebeb', '#f1efe8'];
 
   const SEED = [
-    {
-      id: 'seed-blocks', label: 'Blocks in the bin',
-      photo: picture('#e6f1fb', '#185fa5',
-        '<rect x="17" y="47" width="29" height="29" rx="5"/><rect x="54" y="47" width="29" height="29" rx="5"/><rect x="35" y="14" width="29" height="29" rx="5"/>')
-    },
-    {
-      id: 'seed-books', label: 'Books on the shelf',
-      photo: picture('#eeedfe', '#534ab7',
-        '<rect x="18" y="60" width="64" height="15" rx="4"/><rect x="23" y="41" width="54" height="15" rx="4"/><rect x="16" y="22" width="60" height="15" rx="4"/>')
-    },
-    {
-      id: 'seed-clothes', label: 'Clothes in the basket',
-      photo: picture('#e1f5ee', '#0f6e56',
-        '<path d="M36 21 L26 26 L15 40 L27 50 L32 44 L32 80 L68 80 L68 44 L73 50 L85 40 L74 26 L64 21 C61 31 39 31 36 21 Z"/>')
-    },
-    {
-      id: 'seed-cars', label: 'Cars in the box',
-      photo: picture('#faece7', '#993c1d',
-        '<path d="M30 40 h40 l10 16 h-60 z"/><rect x="14" y="54" width="72" height="18" rx="6"/><circle cx="31" cy="75" r="8"/><circle cx="69" cy="75" r="8"/>')
-    }
+    { id: 'seed-blocks', label: 'Blocks in the bin', emoji: '\u{1F9F1}', color: COLORS[0] },
+    { id: 'seed-books', label: 'Books on the shelf', emoji: '\u{1F4DA}', color: COLORS[1] },
+    { id: 'seed-clothes', label: 'Clothes in the basket', emoji: '\u{1F455}', color: COLORS[2] },
+    { id: 'seed-cars', label: 'Cars in the box', emoji: '\u{1F697}', color: COLORS[3] }
   ];
 
   const DEFAULTS = {
@@ -57,7 +35,8 @@ const Store = (() => {
     return SEED.map(seed => ({
       id: seed.id,
       label: seed.label,
-      seedPhoto: seed.photo,
+      emoji: seed.emoji,
+      color: seed.color,
       photoId: null,
       audioId: null,
       seconds: seconds
@@ -80,6 +59,11 @@ const Store = (() => {
     if (!Array.isArray(state.tasks) || state.tasks.length === 0) {
       state.tasks = seedTasks(state.defaultSeconds);
     }
+    /* Older saves predate emoji and tile colours. */
+    state.tasks.forEach((t, i) => {
+      if (typeof t.emoji !== 'string') t.emoji = '';
+      if (!t.color) t.color = COLORS[i % COLORS.length];
+    });
     if (!Array.isArray(state.weeks)) state.weeks = [];
     if (!Array.isArray(state.sessions)) state.sessions = [];
     rollWeek();
@@ -127,7 +111,8 @@ const Store = (() => {
     const t = {
       id: 'task-' + Math.random().toString(36).slice(2, 9),
       label: '',
-      seedPhoto: null,
+      emoji: '\u{2B50}',
+      color: COLORS[state.tasks.length % COLORS.length],
       photoId: null,
       audioId: null,
       seconds: state.defaultSeconds
@@ -211,6 +196,6 @@ const Store = (() => {
     addTask, updateTask, removeTask, moveTask,
     awardStar, recordSession, resetStars,
     doneToday, markDone, clearToday,
-    seedTasks, WEEK_MS
+    seedTasks, COLORS, WEEK_MS
   };
 })();

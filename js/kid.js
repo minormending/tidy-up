@@ -33,9 +33,26 @@ const Kid = (() => {
 
   function level() { return Store.get().supportLevel || 1; }
 
-  async function pictureFor(task) {
+  /* A photo of the real bin beats everything; an emoji on a soft colour
+     is the fallback, and it is what a job starts life with. */
+  async function paintPicture(node, task) {
     const fromCamera = await Media.url(task.photoId);
-    return fromCamera || task.seedPhoto || '';
+    node.textContent = '';
+    node.style.backgroundImage = '';
+    node.style.backgroundColor = '';
+    node.classList.remove('is-emoji');
+
+    if (fromCamera) {
+      node.style.backgroundImage = 'url("' + fromCamera + '")';
+      return;
+    }
+    if (task.seedPhoto) {
+      node.style.backgroundImage = 'url("' + task.seedPhoto + '")';
+      return;
+    }
+    node.classList.add('is-emoji');
+    node.style.backgroundColor = task.color || '#f1efe8';
+    node.textContent = task.emoji || '';
   }
 
   function fillStars(node, count, slots) {
@@ -70,8 +87,7 @@ const Kid = (() => {
 
       const picture = document.createElement('span');
       picture.className = 'tile-picture';
-      const url = await pictureFor(task);
-      if (url) picture.style.backgroundImage = 'url("' + url + '")';
+      await paintPicture(picture, task);
       btn.appendChild(picture);
 
       const label = document.createElement('span');
@@ -123,8 +139,7 @@ const Kid = (() => {
     el.taskGrid.hidden = true;
     el.timerWrap.hidden = false;
 
-    const url = await pictureFor(task);
-    el.taskPhoto.style.backgroundImage = url ? 'url("' + url + '")' : '';
+    await paintPicture(el.taskPhoto, task);
     el.taskPhoto.setAttribute('aria-label', task.label || 'A tidy-up job');
     el.taskLabel.textContent = task.label || '';
 
@@ -204,8 +219,7 @@ const Kid = (() => {
 
       const picture = document.createElement('span');
       picture.className = 'tile-picture';
-      const url = await pictureFor(task);
-      if (url) picture.style.backgroundImage = 'url("' + url + '")';
+      await paintPicture(picture, task);
       cell.appendChild(picture);
 
       const label = document.createElement('span');
