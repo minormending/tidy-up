@@ -4,10 +4,13 @@ const Store = (() => {
   const KEY = 'tidyup.v1';
   const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
+  /* The shape is scaled well inside its square so that cropping the
+     placeholder to a non-square tile never clips it. */
   function picture(bg, ink, shapes) {
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
       '<rect width="100" height="100" fill="' + bg + '"/>' +
-      '<g fill="' + ink + '">' + shapes + '</g></svg>';
+      '<g fill="' + ink + '" transform="translate(50,50) scale(0.66) translate(-50,-50)">' +
+      shapes + '</g></svg>';
     return 'data:image/svg+xml,' + encodeURIComponent(svg);
   }
 

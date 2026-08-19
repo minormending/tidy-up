@@ -2,7 +2,6 @@
    one picture, one timer, one button. */
 const Kid = (() => {
   const RING = 283;
-  const STAR_SLOTS = 10;
   const REST_AFTER_MS = 6000;
   const STAR_PATH = 'M12 2.6l2.9 6.1 6.6.9-4.8 4.7 1.2 6.7-5.9-3.2-5.9 3.2 1.2-6.7L2.5 9.6l6.6-.9z';
   const TICK_PATH = 'M4.5 12.5l5 5 10-11';
@@ -51,11 +50,14 @@ const Kid = (() => {
   /* ---- start screen ---- */
 
   async function renderStart() {
-    const state = Store.get();
-    fillStars(el.weekStars, state.stars, STAR_SLOTS);
-
     const done = Store.doneToday();
     const tasks = Store.tasks();
+
+    /* Today's jobs, not the week's total: at five, a row that fills in
+       across one afternoon means something and a weekly tally does not.
+       The running total is in the grown-up panel. */
+    fillStars(el.weekStars, done.length, tasks.length);
+
     el.tileGrid.innerHTML = '';
     el.tileGrid.style.gridTemplateColumns = 'repeat(' + (tasks.length <= 2 ? tasks.length || 1 : 2) + ', 1fr)';
 
@@ -65,8 +67,18 @@ const Kid = (() => {
       btn.dataset.taskId = task.id;
       btn.setAttribute('aria-label', task.label || 'A tidy-up job');
       btn.innerHTML = tickSvg();
+
+      const picture = document.createElement('span');
+      picture.className = 'tile-picture';
       const url = await pictureFor(task);
-      if (url) btn.style.backgroundImage = 'url("' + url + '")';
+      if (url) picture.style.backgroundImage = 'url("' + url + '")';
+      btn.appendChild(picture);
+
+      const label = document.createElement('span');
+      label.className = 'tile-label';
+      label.textContent = task.label || '';
+      btn.appendChild(label);
+
       el.tileGrid.appendChild(btn);
     }
 
@@ -114,6 +126,7 @@ const Kid = (() => {
     const url = await pictureFor(task);
     el.taskPhoto.style.backgroundImage = url ? 'url("' + url + '")' : '';
     el.taskPhoto.setAttribute('aria-label', task.label || 'A tidy-up job');
+    el.taskLabel.textContent = task.label || '';
 
     const total = Store.tasks().length || 1;
     const doneCount = Store.doneToday().length;
@@ -188,12 +201,23 @@ const Kid = (() => {
       cell.className = 'task-cell';
       cell.dataset.taskId = task.id;
       cell.setAttribute('aria-label', task.label || 'A tidy-up job');
+
+      const picture = document.createElement('span');
+      picture.className = 'tile-picture';
       const url = await pictureFor(task);
-      if (url) cell.style.backgroundImage = 'url("' + url + '")';
+      if (url) picture.style.backgroundImage = 'url("' + url + '")';
+      cell.appendChild(picture);
+
+      const label = document.createElement('span');
+      label.className = 'tile-label';
+      label.textContent = task.label || '';
+      cell.appendChild(label);
+
       el.taskGrid.appendChild(cell);
     }
     el.progressFill.style.width = '0%';
     el.timerWrap.classList.add('is-untimed');
+    el.taskLabel.textContent = '';
     show('task');
   }
 
@@ -205,6 +229,24 @@ const Kid = (() => {
     });
     Chime.star();
     finishSession();
+  }
+
+  /* A wrong tap should not trap him. Stars already earned stay earned -
+     nothing here takes one back - and the rest of the run is dropped. */
+  function abortSession() {
+    stopTimer();
+    if (session && session.earned > 0) {
+      Store.recordSession({
+        tasks: session.queue.length,
+        earned: session.earned,
+        beatTimer: session.beat,
+        level: level(),
+        stopped: true
+      });
+    }
+    session = null;
+    releaseWakeLock();
+    return renderStart();
   }
 
   /* ---- ending ---- */
@@ -284,12 +326,14 @@ const Kid = (() => {
     el.ringFill = $('ring-fill');
     el.progressFill = $('progress-fill');
     el.sessionStars = $('session-stars');
+    el.taskLabel = $('task-label');
 
     el.tileGrid.addEventListener('click', onTileTap);
     el.goButton.addEventListener('click', onGo);
     el.taskPhoto.addEventListener('click', onPhotoTap);
     el.taskGrid.addEventListener('click', onPhotoTap);
     $('check-button').addEventListener('click', onCheck);
+    $('task-back').addEventListener('click', abortSession);
     $('replay-button').addEventListener('click', () => Chime.finish());
     bindRestWake();
 

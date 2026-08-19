@@ -67,6 +67,44 @@ button {
   gap: var(--gap);
 }
 
+/* One card on a warm ground, rather than tiles bleeding to the bezel. */
+.panel {
+  width: min(100%, 560px);
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 2.6vh, 24px);
+  padding: clamp(14px, 3vh, 28px) clamp(14px, 3vw, 26px) clamp(18px, 3.4vh, 30px);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: clamp(18px, 3.4vw, 30px);
+}
+
+.panel--center { justify-content: center; }
+
+.panel-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2.4vw, 18px);
+  flex: none;
+}
+
+.back-button {
+  width: clamp(40px, 6.4vh, 54px);
+  height: clamp(40px, 6.4vh, 54px);
+  flex: none;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  color: #8a857a;
+}
+
+.back-button .glyph { width: 42%; height: 42%; }
+.back-button:active { background: #eceadf; }
+
 .screen[hidden] { display: none; }
 
 /* ---- star rows ---- */
@@ -111,7 +149,7 @@ button {
 .tile-grid {
   flex: 1 1 auto;
   min-height: 0;
-  width: min(100%, 78vh);
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: 1fr;
@@ -123,12 +161,40 @@ button {
   min-height: 0;
   min-width: 0;
   border-radius: var(--round);
-  background: var(--surface) center/cover no-repeat;
+  background: var(--paper);
   border: none;
   overflow: hidden;
   transition: transform 120ms ease;
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
+
+.tile-picture {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background: transparent center/cover no-repeat;
+}
+
+/* Small on purpose: the picture is what the child reads, the word is
+   there so the grown-ups say the same thing every time. */
+.tile-label {
+  flex: none;
+  width: 100%;
+  padding: clamp(5px, 1vh, 9px) 8px calc(clamp(5px, 1vh, 9px) + 1px);
+  font-size: clamp(11px, 1.9vh, 15px);
+  line-height: 1.25;
+  font-weight: 500;
+  color: #55524a;
+  background: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tile-label:empty { display: none; }
 
 .tile:active { transform: scale(0.96); }
 
@@ -136,9 +202,9 @@ button {
 
 .tile-check {
   position: absolute;
-  right: 7%;
-  bottom: 7%;
-  width: 24%;
+  right: 6%;
+  top: 6%;
+  width: 22%;
   height: auto;
   aspect-ratio: 1;
   border-radius: 50%;
@@ -176,8 +242,9 @@ button {
 .timer-wrap {
   position: relative;
   flex: 0 1 auto;
-  width: min(100%, 58vh);
+  width: min(100%, 52vh);
   aspect-ratio: 1;
+  margin: auto 0;
 }
 
 .timer-wrap[hidden] { display: none; }
@@ -223,7 +290,7 @@ button {
 .task-grid {
   flex: 1 1 auto;
   min-height: 0;
-  width: min(100%, 78vh);
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: 1fr;
@@ -236,17 +303,32 @@ button {
   min-height: 0;
   min-width: 0;
   border-radius: var(--round);
-  background: var(--surface) center/cover no-repeat;
-  display: block;
+  background: var(--paper);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
+.task-label {
+  flex: none;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(14px, 2.6vh, 21px);
+  font-weight: 500;
+  line-height: 1.3;
+  color: #45423b;
+}
+
+.task-label:empty { display: none; }
+
 .progress-track {
-  width: min(100%, 520px);
+  flex: 1 1 auto;
+  min-width: 0;
   height: clamp(8px, 1.4vh, 14px);
   border-radius: 999px;
   background: var(--hairline);
   overflow: hidden;
-  flex: none;
 }
 
 .progress-fill {
@@ -258,7 +340,7 @@ button {
 }
 
 .check-button {
-  width: min(100%, 520px);
+  width: 100%;
   height: clamp(84px, 15vh, 128px);
   flex: none;
   border-radius: var(--round);
