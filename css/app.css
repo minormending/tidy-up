@@ -574,6 +574,32 @@ button {
 
 .task-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.55rem; }
 
+/* Reordering lives down the right-hand edge, away from the per-job
+   actions, so the row reads as picture - job - position. */
+.task-move {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  flex: none;
+}
+
+.move-button {
+  width: 36px;
+  height: 32px;
+  border-radius: 9px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: #6f6a5e;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.move-button:hover:not(:disabled) { background: #faf8f2; color: var(--ink); }
+.move-button:active:not(:disabled) { background: #efece3; }
+.move-button:disabled { opacity: 0.28; cursor: default; }
+
+.move-glyph { width: 19px; height: 19px; display: block; }
+
 .thumb {
   position: relative;
   width: 76px;

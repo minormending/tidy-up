@@ -213,16 +213,6 @@ const Parent = (() => {
       actions.appendChild(play);
     }
 
-    const up = el('button', 'btn btn--quiet', 'Up');
-    up.disabled = index === 0;
-    up.addEventListener('click', () => { Store.moveTask(task.id, -1); render(); });
-    actions.appendChild(up);
-
-    const down = el('button', 'btn btn--quiet', 'Down');
-    down.disabled = index === total - 1;
-    down.addEventListener('click', () => { Store.moveTask(task.id, 1); render(); });
-    actions.appendChild(down);
-
     const del = el('button', 'btn btn--quiet btn--danger', 'Remove');
     del.addEventListener('click', async () => {
       if (!window.confirm('Remove "' + (task.label || 'this job') + '"?')) return;
@@ -234,7 +224,30 @@ const Parent = (() => {
     body.appendChild(actions);
     thumb.addEventListener('click', () => togglePicker(task, body));
     row.appendChild(body);
+
+    const move = el('div', 'task-move');
+    move.appendChild(moveButton(task, 'up', index === 0));
+    move.appendChild(moveButton(task, 'down', index === total - 1));
+    row.appendChild(move);
+
     return row;
+  }
+
+  function moveButton(task, direction, atEnd) {
+    const up = direction === 'up';
+    const button = el('button', 'move-button');
+    button.type = 'button';
+    button.disabled = atEnd;
+    button.setAttribute('aria-label',
+      'Move ' + (task.label || 'this job') + (up ? ' up' : ' down'));
+    button.innerHTML = '<svg viewBox="0 0 24 24" class="move-glyph" aria-hidden="true">' +
+      '<path d="' + (up ? 'M6 14.5l6-6 6 6' : 'M6 9.5l6 6 6-6') + '" fill="none" ' +
+      'stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    button.addEventListener('click', () => {
+      Store.moveTask(task.id, up ? -1 : 1);
+      render();
+    });
+    return button;
   }
 
   /* ---- choosing a picture ---- */

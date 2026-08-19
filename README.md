@@ -140,6 +140,7 @@ js/qr.js            QR encoder
 sw.js               offline shell
 test/qr-test.js     checks the encoder against a reference implementation
 test/css-test.js    checks no styling has been deleted by accident
+.githooks/          pre-commit hook running that check
 ```
 
 ## Tests
@@ -151,6 +152,15 @@ node test/qr-test.js && node test/css-test.js
 `css-test.js` checks that every class the markup and scripts actually apply has
 a rule in the stylesheet. Editing that file by slicing between markers has
 twice silently deleted a whole section, so this guards against it.
+
+It also runs as a pre-commit hook. The hook is tracked in `.githooks/`, so
+turn it on once per clone:
+
+```
+git config core.hooksPath .githooks
+```
+
+A commit that would ship unstyled classes is refused; `--no-verify` skips it.
 
 
 Compares every QR version (1-40), both error correction levels, and all eight

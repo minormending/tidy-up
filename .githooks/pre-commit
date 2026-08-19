@@ -1,0 +1,19 @@
+#!/bin/sh
+# Refuses a commit whose markup or scripts apply a class the stylesheet has
+# no rule for. Editing css/app.css by slicing between markers has twice
+# silently deleted a whole section; this stops that reaching a commit.
+#
+# Enabled with:  git config core.hooksPath .githooks
+# Bypassed with: git commit --no-verify
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "pre-commit: node not found, cannot run test/css-test.js" >&2
+  exit 1
+fi
+
+node test/css-test.js || {
+  echo "" >&2
+  echo "pre-commit: styling is missing for the classes listed above." >&2
+  echo "Fix css/app.css, or commit with --no-verify if this is deliberate." >&2
+  exit 1
+}
