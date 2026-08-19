@@ -176,22 +176,19 @@ button {
   background: transparent center/cover no-repeat;
 }
 
-.tile-picture.is-emoji {
+/* An SVG with a viewBox keeps its own aspect ratio inside whatever box
+   it is given, so setting both dimensions never distorts the shape. */
+.tile-picture.is-icon,
+.task-photo.is-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(36px, 11vh, 96px);
-  line-height: 1;
   overflow: hidden;
 }
 
-.task-photo.is-emoji {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(64px, 19vh, 168px);
-  line-height: 1;
-}
+.tile-picture.is-icon .icon-svg { width: 54%; height: 54%; }
+.task-photo.is-icon .icon-svg { width: 48%; height: 48%; }
+.icon-svg { display: block; }
 
 /* Small on purpose: the picture is what the child reads, the word is
    there so the grown-ups say the same thing every time. */
@@ -587,81 +584,78 @@ button {
   border: 1px solid var(--hairline);
 }
 
-.thumb.is-emoji {
+.thumb.is-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 38px;
-  line-height: 1;
 }
+
+.thumb.is-icon .icon-svg { width: 56%; height: 56%; }
 
 /* ---- choosing a picture ---- */
 
-.emoji-picker {
+/* Seventy icons in nine groups would otherwise push the rest of the job
+   list a screen and a half down, so the picker scrolls in place. */
+.picture-picker {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.7rem;
+  gap: 0.4rem;
+  padding: 0.75rem;
+  max-height: 46vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: #faf8f2;
   border: 1px solid var(--hairline);
   border-radius: 12px;
 }
 
-.emoji-grid {
+.picker-heading {
+  margin: 0.45rem 0 0.1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #8a857a;
+}
+
+.picker-heading:first-child { margin-top: 0; }
+
+.swatch-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
   gap: 6px;
 }
 
-.emoji-cell {
+.swatch {
   aspect-ratio: 1;
-  min-height: 44px;
+  min-height: 42px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.swatch .icon-svg { width: 52%; height: 52%; }
+.swatch.is-current { border-color: var(--ink); }
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
+  gap: 6px;
+}
+
+.icon-cell {
+  aspect-ratio: 1;
+  min-height: 46px;
   border-radius: 10px;
   border: 1px solid transparent;
   background: var(--surface);
-  font-size: 24px;
-  line-height: 1;
 }
 
-.emoji-cell:active { background: #efece3; }
-.emoji-cell.is-current { border-color: var(--go); background: #f1f7ea; }
+.icon-cell .icon-svg { width: 56%; height: 56%; }
+.icon-cell:active { background: #efece3; }
 
-.input--emoji {
-  width: 5.5rem;
-  flex: none;
-  text-align: center;
-  font-size: 1.35rem;
+.icon-cell.is-current {
+  border-color: var(--go);
+  background: #f1f7ea;
 }
-
-.level {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.15rem;
-  text-align: left;
-  width: 100%;
-  padding: 0.7rem 0.8rem;
-  border-radius: 12px;
-  border: 1px solid var(--hairline);
-  background: #faf8f2;
-}
-
-.level.is-current { border-color: var(--go); background: #f1f7ea; }
-.level-title { font-size: 0.92rem; font-weight: 600; }
-.level-body { font-size: 0.82rem; color: #6f6a5e; line-height: 1.45; }
-
-.history { display: flex; flex-direction: column; gap: 0.3rem; }
-
-.history-line {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 0.85rem;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid #f0ede4;
-}
-
-.history-line:last-child { border-bottom: none; }
 
 /* ---- backup, and an incoming setup code ---- */
 

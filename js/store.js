@@ -4,16 +4,33 @@ const Store = (() => {
   const KEY = 'tidyup.v1';
   const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
-  /* Soft tile backgrounds, assigned when a job is created so that
-     reordering the list does not shuffle the colours. */
-  const COLORS = ['#e6f1fb', '#eeedfe', '#e1f5ee', '#faece7', '#fbeeda', '#eaf3de', '#fcebeb', '#f1efe8'];
+  /* Each job gets a soft background and a matching ink for its icon.
+     With one-colour icons the colour is doing real work telling the
+     tiles apart, so it is chosen at creation and then left alone. */
+  const PALETTE = [
+    { bg: '#e6f1fb', ink: '#185fa5' },
+    { bg: '#eeedfe', ink: '#534ab7' },
+    { bg: '#e1f5ee', ink: '#0f6e56' },
+    { bg: '#faece7', ink: '#993c1d' },
+    { bg: '#fbeeda', ink: '#854f0b' },
+    { bg: '#eaf3de', ink: '#3b6d11' },
+    { bg: '#fcebeb', ink: '#a32d2d' },
+    { bg: '#f1efe8', ink: '#5f5e5a' }
+  ];
 
   const SEED = [
-    { id: 'seed-blocks', label: 'Blocks in the bin', emoji: '\u{1F9F1}', color: COLORS[0] },
-    { id: 'seed-books', label: 'Books on the shelf', emoji: '\u{1F4DA}', color: COLORS[1] },
-    { id: 'seed-clothes', label: 'Clothes in the basket', emoji: '\u{1F455}', color: COLORS[2] },
-    { id: 'seed-cars', label: 'Cars in the box', emoji: '\u{1F697}', color: COLORS[3] }
+    { id: 'seed-blocks', label: 'Blocks in the bin', icon: 'cube', color: PALETTE[0].bg },
+    { id: 'seed-books', label: 'Books on the shelf', icon: 'books', color: PALETTE[1].bg },
+    { id: 'seed-clothes', label: 'Clothes in the basket', icon: 't-shirt', color: PALETTE[2].bg },
+    { id: 'seed-cars', label: 'Cars in the box', icon: 'car', color: PALETTE[3].bg }
   ];
+
+  /* Only the background travels in a backup or a setup code; the ink is
+     looked up from it, so an unknown colour still gets readable ink. */
+  function inkFor(bg) {
+    const found = PALETTE.find(p => p.bg === bg);
+    return found ? found.ink : '#5f5e5a';
+  }
 
   const DEFAULTS = {
     version: 1,
@@ -35,7 +52,7 @@ const Store = (() => {
     return SEED.map(seed => ({
       id: seed.id,
       label: seed.label,
-      emoji: seed.emoji,
+      icon: seed.icon,
       color: seed.color,
       photoId: null,
       audioId: null,
@@ -59,10 +76,11 @@ const Store = (() => {
     if (!Array.isArray(state.tasks) || state.tasks.length === 0) {
       state.tasks = seedTasks(state.defaultSeconds);
     }
-    /* Older saves predate emoji and tile colours. */
+    /* Older saves predate icons and tile colours. */
     state.tasks.forEach((t, i) => {
-      if (typeof t.emoji !== 'string') t.emoji = '';
-      if (!t.color) t.color = COLORS[i % COLORS.length];
+      if (typeof t.icon !== 'string' || !t.icon) t.icon = 'star';
+      if (!t.color) t.color = PALETTE[i % PALETTE.length].bg;
+      delete t.emoji;
     });
     if (!Array.isArray(state.weeks)) state.weeks = [];
     if (!Array.isArray(state.sessions)) state.sessions = [];
@@ -111,8 +129,8 @@ const Store = (() => {
     const t = {
       id: 'task-' + Math.random().toString(36).slice(2, 9),
       label: '',
-      emoji: '\u{2B50}',
-      color: COLORS[state.tasks.length % COLORS.length],
+      icon: 'star',
+      color: PALETTE[state.tasks.length % PALETTE.length].bg,
       photoId: null,
       audioId: null,
       seconds: state.defaultSeconds
@@ -196,6 +214,6 @@ const Store = (() => {
     addTask, updateTask, removeTask, moveTask,
     awardStar, recordSession, resetStars,
     doneToday, markDone, clearToday,
-    seedTasks, COLORS, WEEK_MS
+    seedTasks, PALETTE, inkFor, WEEK_MS
   };
 })();

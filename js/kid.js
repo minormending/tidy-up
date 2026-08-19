@@ -33,14 +33,14 @@ const Kid = (() => {
 
   function level() { return Store.get().supportLevel || 1; }
 
-  /* A photo of the real bin beats everything; an emoji on a soft colour
-     is the fallback, and it is what a job starts life with. */
+  /* A photo of the real bin beats everything; an icon tinted to the
+     job's colour is the fallback, and it is what a job starts with. */
   async function paintPicture(node, task) {
     const fromCamera = await Media.url(task.photoId);
-    node.textContent = '';
+    node.innerHTML = '';
     node.style.backgroundImage = '';
     node.style.backgroundColor = '';
-    node.classList.remove('is-emoji');
+    node.classList.remove('is-icon');
 
     if (fromCamera) {
       node.style.backgroundImage = 'url("' + fromCamera + '")';
@@ -50,9 +50,9 @@ const Kid = (() => {
       node.style.backgroundImage = 'url("' + task.seedPhoto + '")';
       return;
     }
-    node.classList.add('is-emoji');
+    node.classList.add('is-icon');
     node.style.backgroundColor = task.color || '#f1efe8';
-    node.textContent = task.emoji || '';
+    node.innerHTML = Icons.svg(task.icon || 'star', Store.inkFor(task.color));
   }
 
   function fillStars(node, count, slots) {

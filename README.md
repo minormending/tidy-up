@@ -28,6 +28,12 @@ Every constraint below came out of standard behavioural parent training
 (Kazdin's parent management training, Incredible Years, PCIT). They are worth
 keeping when the temptation arrives to make this more fun.
 
+- **Icons come from [Phosphor](https://github.com/phosphor-icons/core)**, fill
+  weight, MIT licensed and vendored into `js/icons.js` so the app keeps working
+  offline. Only the 70 shapes actually used are included; the licence is in
+  `vendor/`. Each job's icon is tinted to its own colour, because with
+  single-colour icons the colour is doing as much work as the shape in telling
+  one tile from another.
 - **The picture is a photo of the real bin.** "Clean your room" is an abstract
   category a five-year-old cannot execute. "Put the blocks in the blue bin" is
   a task. A photo of *his* bin removes the last abstraction step. The four
@@ -126,6 +132,7 @@ js/idb.js           photos and voice clips (IndexedDB)
 js/kid.js           the child's flow — no words in here on purpose
 js/parent.js        the grown-up panel
 js/chime.js         the few tones, made with WebAudio
+js/icons.js         vendored Phosphor icons (MIT), only the ones used
 js/backup.js        backup files and setup codes
 js/qr.js            QR encoder
 sw.js               offline shell

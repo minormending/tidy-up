@@ -54,7 +54,7 @@ const Backup = (() => {
         id: task.id,
         label: task.label,
         seconds: task.seconds,
-        emoji: task.emoji || '',
+        icon: task.icon || 'star',
         color: task.color || null,
         seedPhoto: task.seedPhoto || null,
         photo: photo ? await blobToDataUrl(photo) : null,
@@ -133,7 +133,7 @@ const Backup = (() => {
         id: t.id,
         label: t.label || '',
         seconds: Number(t.seconds) || bundle.defaultSeconds || 150,
-        emoji: typeof t.emoji === 'string' ? t.emoji : '',
+        icon: typeof t.icon === 'string' && t.icon ? t.icon : 'star',
         color: t.color || null,
         seedPhoto: t.seedPhoto || null,
         photoId: null,
@@ -162,7 +162,7 @@ const Backup = (() => {
   function setupPayload() {
     const state = Store.get();
     return [SETUP_VERSION, state.supportLevel, state.defaultSeconds,
-      Store.tasks().map(t => [t.id, t.label || '', t.seconds, t.emoji || '', t.color || ''])];
+      Store.tasks().map(t => [t.id, t.label || '', t.seconds, t.icon || 'star', t.color || ''])];
   }
 
   function setupUrl() {
@@ -203,7 +203,7 @@ const Backup = (() => {
         id: job[0],
         label: job[1] || '',
         seconds: Number(job[2]) || setup.defaultSeconds,
-        emoji: job[3] || (prior ? prior.emoji : '') || '',
+        icon: job[3] || (prior ? prior.icon : '') || 'star',
         color: job[4] || (prior ? prior.color : null) || null,
         seedPhoto: prior ? prior.seedPhoto : null,
         photoId: prior ? prior.photoId : null,
