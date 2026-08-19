@@ -76,6 +76,24 @@ panel. There you can:
 Add it to the home screen and it opens portrait, full screen, with no address
 bar to wander out of.
 
+## Backing it up, and moving it
+
+Both live under **Backup and moving** in the grown-up panel.
+
+**Backup file.** Saves everything — jobs, photos, voice clips, stars — as a
+single JSON file. This is the real backup: keep one somewhere safe, because
+clearing the browser's site data erases the setup and there is no copy
+anywhere else.
+
+**Setup code.** A QR of the job list only — names, timers, support level.
+Point the other device's camera at it and the app opens already configured;
+the photos then get taken on that device. Jobs keep their id, so scanning the
+same code again on a device that already has photos keeps them.
+
+Photos and recordings deliberately are not in the code, and no amount of
+compression would change that: a QR code holds about 2.9KB and one 720px photo
+is fifty times that. Use a backup file to move media.
+
 ## Privacy
 
 Photos and voice recordings never leave the device. They live in the browser's
@@ -83,8 +101,9 @@ IndexedDB; the task list and stars live in `localStorage`. There is no backend,
 no analytics, and no network request after the page loads. Nothing personal is
 in this repository.
 
-Clearing the browser's site data erases the setup, so re-record rather than
-relying on it as a backup.
+A setup code encodes only the job names, timers, and support level, in the
+link itself — it is never sent anywhere. A backup file is written straight to
+your own device.
 
 ## Running it locally
 
@@ -105,5 +124,24 @@ js/idb.js           photos and voice clips (IndexedDB)
 js/kid.js           the child's flow — no words in here on purpose
 js/parent.js        the grown-up panel
 js/chime.js         the few tones, made with WebAudio
+js/backup.js        backup files and setup codes
+js/qr.js            QR encoder
 sw.js               offline shell
+test/qr-test.js     checks the encoder against a reference implementation
 ```
+
+## Tests
+
+```
+node test/qr-test.js
+```
+
+Compares every QR version (1-40), both error correction levels, and all eight
+mask patterns — 640 symbols — against matrices from the
+[segno](https://github.com/heuer/segno) reference encoder, by hash, and checks
+that an auto-masked symbol matches one of the eight valid symbols for its data.
+No dependencies; the reference hashes are committed.
+
+The rendered SVG output was also rasterised and decoded with OpenCV's QR
+detector to confirm a real camera reads it, including a full five-job setup
+link.
