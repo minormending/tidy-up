@@ -219,7 +219,9 @@ button {
 .tile.is-done { opacity: 0.78; }
 
 /* The badge is sized from the picture it sits on, and clips rather than
-   stretching: a two-digit count must not turn the circle into an oval. */
+   stretching: a two-digit count must not turn the circle into an oval.
+   The count itself is sized from the tile too - see the container query
+   below - so it stays in proportion on any screen. */
 .tile-badge {
   position: absolute;
   right: 6%;
@@ -246,6 +248,20 @@ button {
   width: 34%;
   min-width: 16px;
   font-size: clamp(9px, 1.5vh, 13px);
+}
+
+/* A viewport-based size cannot track the tile: the same number looks lost
+   in a big tile and cramped in a small one. Sizing it against the tile's
+   own width keeps the proportion fixed at any screen size. The clamps
+   above stay as the fallback. */
+@supports (container-type: inline-size) {
+  .tile,
+  .rest-job {
+    container-type: inline-size;
+  }
+
+  .tile-badge { font-size: 12cqw; }
+  .rest-job .tile-badge { font-size: 18cqw; }
 }
 
 .tile-badge-glyph { width: 60%; height: 60%; display: block; }
