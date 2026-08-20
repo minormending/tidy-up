@@ -1,0 +1,152 @@
+/* ============================================================
+   The front door — shared across Letter Sounds, Tidy Up and
+   Behaviour Garden. This file is byte-identical in all three
+   apps; edit it in one and copy it to the others.
+
+   Every game opens on the same object: its name, one line meant
+   for the grown-up, and one big round button to press. Only the
+   paint changes — warm paper in two of them, the garden's own sky
+   in the third — so the three read as one suite without the
+   garden being flattened into a form.
+
+   The button is round and wordless on purpose. A child who cannot
+   read still knows what a play triangle means, and it is the same
+   shape they will press again on the next screen. The caption
+   underneath is for whoever is holding the tablet, and it is also
+   where "Getting ready…" and any failure gets said.
+
+   Only the skeleton is here. This file paints nothing it does not
+   have to: every colour is var(--ld-x, fallback) so the app can set
+   the token and get its own, or set nothing and get warm paper. The
+   fallback lives at the point of use rather than in a :root block
+   here, because this file is loaded last and a :root block would
+   quietly beat the app's own :root on source order. The typeface is
+   whatever the app has already given the child.
+   ============================================================ */
+
+:root {
+  /* Big enough to be the only thing worth pressing, capped so it does
+     not become a dinner plate on a tablet. Internal to this file --
+     the landscape rule below retunes it, so an app that overrode it
+     would lose that. Apps set the colours, not the size. */
+  --ld-tap: min(34vw, 168px);
+}
+
+.landing {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.8rem, 3vh, 1.6rem);
+  padding: 6vh 6vw;
+  text-align: center;
+}
+
+.landing-name {
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ld-ink, #2f2a25);
+  text-shadow: var(--ld-shadow, none);
+}
+
+/* One line, and it is addressed to the grown-up: the child is not
+   reading it, and a second line is one the grown-up will not read
+   either. */
+.landing-lede {
+  margin: 0;
+  max-width: 26ch;
+  font-size: clamp(1rem, 3.4vw, 1.25rem);
+  line-height: 1.4;
+  color: var(--ld-lede, #8a8178);
+  text-shadow: var(--ld-shadow, none);
+}
+
+.landing-go {
+  width: var(--ld-tap);
+  height: var(--ld-tap);
+  margin-top: clamp(0.4rem, 2vh, 1.2rem);
+  flex: none;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  background: var(--ld-go-bg, #3f7d6a);
+  color: var(--ld-go-ink, #fff);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  /* The same solid drop the other big buttons in the suite have, so
+     it reads as pressable rather than printed. */
+  box-shadow: 0 6px 0 var(--ld-go-deep, #2f6153);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.2s ease;
+}
+
+.landing-go:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--ld-go-deep, #2f6153);
+}
+
+/* While the sounds load. Still visible, so the screen does not look
+   broken, but plainly not ready. */
+.landing-go:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+  box-shadow: 0 6px 0 var(--ld-go-deep, #2f6153);
+}
+
+.landing-go-glyph {
+  width: 42%;
+  height: 42%;
+  display: block;
+  /* An equilateral triangle sits visually left of centre in its own
+     box; nudge it back or the circle looks lopsided. */
+  margin-left: 6%;
+  fill: currentColor;
+}
+
+.landing-cap {
+  margin: 0;
+  min-height: 1.5em;
+  font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  color: var(--ld-cap, #8a8178);
+  text-shadow: var(--ld-shadow, none);
+}
+
+.landing-err {
+  margin: 0;
+  max-width: 30ch;
+  min-height: 1.4em;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--ld-err, #b4503c);
+  text-shadow: var(--ld-shadow, none);
+}
+
+.landing-err:empty { min-height: 0; }
+
+/* Leaving. The column fades and the app is underneath it already,
+   which is what makes the garden feel like it was always there. */
+.landing.is-going {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.26s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing, .landing-go { transition-duration: 1ms !important; }
+}
+
+/* Short and wide — a phone on its side. The name and the button
+   cannot both have their full height, and the button is the one
+   being reached for. */
+@media (orientation: landscape) and (max-height: 560px) {
+  :root { --ld-tap: min(22vh, 112px); }
+  .landing { gap: clamp(0.4rem, 1.6vh, 0.9rem); padding: 4vh 6vw; }
+  .landing-name { font-size: clamp(1.5rem, 5vh, 2.4rem); }
+  .landing-lede { font-size: clamp(0.9rem, 2.6vh, 1.1rem); }
+}
