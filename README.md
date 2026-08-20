@@ -185,11 +185,30 @@ python3 -m http.server 8791
 Then open http://localhost:8791. Plain static files — no build step and no
 dependencies. Camera and microphone need `localhost` or HTTPS.
 
+## The shared look
+
+The front door the app opens on — its name, the line under it, the round play
+button — and the grown-up panel's controls are not written here. They are
+[minormending/kidsuite](https://github.com/minormending/kidsuite), vendored into
+`suite/` the same way `sync/` is, and shared with the other games so the three
+read as one suite rather than three unrelated apps.
+
+Edit it there and run `kidsuite/tools/install`, which also reminds you to bump
+`CACHE` in `sw.js`; `kidsuite/tools/check` fails if a copy has drifted. Never
+edit `suite/` directly.
+
+What belongs to *this* app is the paint and the one thing the door has to do
+here: the `--ld-` and `--gu-` tokens at the top of `css/app.css`, and
+`Chime.unlock()` on the way through, without which the tones and the recorded
+voice cannot play at all on iOS. The words on the door are for whoever is
+holding the tablet, same as the labels under the job pictures; what the child
+has to understand is the round button.
+
 ## Layout
 
 ```
 index.html          all screens
-css/app.css         one stylesheet
+css/app.css         this app's stylesheet — child screens, and the shared tokens
 js/store.js         task list, settings, stars (localStorage)
 js/idb.js           photos and voice clips (IndexedDB)
 js/kid.js           the child's flow — no words in here on purpose
@@ -200,6 +219,7 @@ js/backup.js        backup files and setup codes
 js/qr.js            QR encoder
 js/sync-state.js    what merging two devices' progress means (no DOM, testable)
 js/sync.js          live sync plumbing
+suite/              vendored from minormending/kidsuite — edit it there, not here
 sync/               vendored from minormending/kidsync — edit it there, not here
 sw.js               offline shell
 test/qr-test.js     checks the encoder against a reference implementation
