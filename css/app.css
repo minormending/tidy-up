@@ -686,6 +686,21 @@ button {
 .btn.is-recording { background: #fdecec; border-color: #e6b3b3; color: #9a2b2b; }
 
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+/* display:flex beats the hidden attribute, same as .go-button and the rest. */
+.btn-row[hidden] { display: none; }
+
+.sync-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  align-self: center;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  background: #f0ede4;
+  color: var(--ink);
+  word-break: break-all;
+}
 
 .field { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.9rem; }
 .field--row { flex-direction: row; align-items: center; gap: 0.6rem; }
