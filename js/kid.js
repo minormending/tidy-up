@@ -433,23 +433,20 @@ const Kid = (() => {
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', onResize);
 
-    $('hello-go').addEventListener('click', enter);
+    /* The door, its markup and its fade all come from suite/landing.js. The
+       tap on it is the one that lets WebAudio run and the recorded voice play;
+       without it the first job of the first session is silent on iOS. */
+    Landing.open({
+      host: '#screen-hello',
+      name: 'Tidy Up',
+      lede: 'One job at a time, with a picture and a timer.',
+      onStart: () => Chime.unlock(),
+      onLeave: () => show('start'),
+    });
 
     /* Paint the jobs first, then cover them with the front door, so the
        screen behind the fade is already the real one. */
     return renderStart().then(() => show('hello'));
-  }
-
-  /* The tap here is the one that lets WebAudio run and the recorded voice
-     play; without it the first job of the first session is silent on iOS. */
-  function enter() {
-    Chime.unlock();
-    const pad = document.getElementById('landing');
-    pad.classList.add('is-going');
-    setTimeout(() => {
-      show('start');
-      pad.classList.remove('is-going');
-    }, 260);
   }
 
   return { init, renderStart, renderRest, show };
