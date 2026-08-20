@@ -12,6 +12,7 @@ const Parent = (() => {
 
   let recorder = null;
   let gate = null;
+  let syncCard = null;
   let recordingFor = null;
   let preview = null;
 
@@ -450,54 +451,29 @@ const Parent = (() => {
 
   /* ---- two devices at once ---- */
 
-  const JOIN_ERRORS = {
-    malformed: 'That code is not complete \u2014 three words and three numbers.',
-    'not-found': 'No device found with that code. Check for a typo, or press Start sharing on the other one for a fresh code.',
-    network: 'Could not reach the network just now. Try again in a moment.',
-    'not-configured': 'Sharing is not available on this device.'
-  };
-
+  /* The card, the pairing flow and every string in it come from
+     suite/sync-card.js. What is this app's is the prose -- what travels and
+     what does not is different in every game -- and claiming the room, which is
+     tangled up with how a clear merges. */
   function renderSync() {
-    const handle = Sync.handle();
-    const paired = handle && handle.roomCode;
-    const status = handle ? handle.status : 'local';
-    const note = $('sync-state');
-
-    if (!handle) {
-      note.textContent = 'Sharing is unavailable \u2014 this device could not reach the sync service. '
-        + 'Everything here is saved as usual.';
-    } else if (!paired) {
-      note.textContent = 'Not sharing. This device keeps its own record.';
-    } else if (status === 'synced') {
-      note.textContent = 'Sharing with code ' + handle.roomCode + '.';
-    } else if (status === 'offline') {
-      note.textContent = 'Sharing with code ' + handle.roomCode
-        + ' \u2014 offline just now. It will catch up when the connection returns.';
-    } else {
-      note.textContent = 'Connecting\u2026';
-    }
-
-    $('sync-off').hidden = !handle || !!paired;
-    $('sync-on').hidden = !handle || !paired;
-    $('sync-code').textContent = paired ? handle.roomCode : '';
-  }
-
-  async function joinFromInput() {
-    const handle = Sync.handle();
-    if (!handle) return;
-    const msg = $('sync-join-msg');
-    const go = $('sync-join-go');
-    go.disabled = true;
-    const res = await handle.joinRoom($('sync-code-input').value);
-    go.disabled = false;
-    msg.hidden = false;
-    if (res.ok) {
-      msg.textContent = 'Connected. The two records are merging now.';
-      $('sync-join-box').hidden = true;
-      renderSync();
-    } else {
-      msg.textContent = JOIN_ERRORS[res.reason] || 'That did not work. Try again.';
-    }
+    if (syncCard) return syncCard.render();
+    syncCard = SyncCard.mount({
+      host: '#sync-card',
+      handle: () => Sync.handle(),
+      noun: 'device',
+      lede: [
+        'Keeps the day the same on both: a job finished on the tablet shows as '
+        + 'done on your phone a moment later. Stars, today\u2019s ticks and the run '
+        + 'log travel.',
+        'Jobs, photos and recordings do not. Those move with a backup file or the '
+        + 'setup code above \u2014 a photo of your child\u2019s room and your recorded '
+        + 'voice stay on the device they were made on.',
+      ],
+      joinNote: 'Type the code shown on the other device. Connecting merges the two, '
+        + 'and nothing is ever lowered, so no star or tick is lost either way.',
+      onCreated: (code) => { Store.get().syncRoom = code; Store.save(); },
+      onLeft: () => Sync.forgetRoom(),
+    });
   }
 
   async function render() {
@@ -529,46 +505,6 @@ const Parent = (() => {
 
     $('chime-toggle').addEventListener('change', e => Store.set({ chimeOn: e.target.checked }));
 
-    $('sync-start').addEventListener('click', async () => {
-      const handle = Sync.handle();
-      if (!handle) return;
-      const btn = $('sync-start');
-      btn.disabled = true;
-      try {
-        await handle.createRoom();
-        /* Claim the room now. Sync.apply would otherwise only learn it when a
-           remote change arrives, and until then a clear from the other device
-           would look like first contact and be levelled away instead of
-           applied. Safe to claim here because we seeded this room ourselves. */
-        Store.get().syncRoom = handle.roomCode;
-        Store.save();
-      } catch (err) {
-        $('sync-state').textContent = 'Could not start sharing just now.';
-      }
-      btn.disabled = false;
-      renderSync();
-    });
-
-    $('sync-join').addEventListener('click', () => {
-      $('sync-join-box').hidden = false;
-      $('sync-join-msg').hidden = true;
-      $('sync-code-input').value = '';
-      $('sync-code-input').focus();
-    });
-
-    $('sync-join-cancel').addEventListener('click', () => { $('sync-join-box').hidden = true; });
-    $('sync-join-go').addEventListener('click', joinFromInput);
-    $('sync-code-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') joinFromInput();
-    });
-
-    $('sync-stop').addEventListener('click', () => {
-      const handle = Sync.handle();
-      if (!handle) return;
-      handle.leaveRoom();
-      Sync.forgetRoom();
-      renderSync();
-    });
 
     /* Repaint when a remote change lands or the connection state moves.
 

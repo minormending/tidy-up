@@ -145,29 +145,8 @@
         <div class="qr-holder" id="setup-code" hidden></div>
       </section>
 
-      <section class="block">
-        <h2>Two devices at once</h2>
-        <p class="hint">Keeps the day the same on both: a job finished on the tablet shows as done on your phone a moment later. Stars, today&rsquo;s ticks and the run log travel.</p>
-        <p class="hint">Jobs, photos and recordings do not. Those move with a backup file or the setup code above &mdash; a photo of your child&rsquo;s room and your recorded voice stay on the device they were made on.</p>
-        <p class="stat" id="sync-state"></p>
-        <div class="btn-row" id="sync-off" hidden>
-          <button class="btn btn--go" id="sync-start">Start sharing</button>
-          <button class="btn btn--quiet" id="sync-join">Enter a code</button>
-        </div>
-        <div class="btn-row" id="sync-on" hidden>
-          <code class="sync-code" id="sync-code"></code>
-          <button class="btn btn--quiet" id="sync-stop">Stop sharing here</button>
-        </div>
-        <div id="sync-join-box" hidden>
-          <p class="hint">Type the code shown on the other device. Connecting merges the two, and nothing is ever lowered, so no star or tick is lost either way.</p>
-          <input class="input input--code" id="sync-code-input" type="text" placeholder="WORD-WORD-WORD-123" autocomplete="off" autocapitalize="characters" spellcheck="false">
-          <div class="btn-row">
-            <button class="btn btn--go" id="sync-join-go">Connect</button>
-            <button class="btn btn--quiet" id="sync-join-cancel">Cancel</button>
-          </div>
-          <p class="hint" id="sync-join-msg" hidden></p>
-        </div>
-      </section>
+      <!-- The sharing card renders in here: suite/sync-card.js. -->
+      <div id="sync-card"></div>
 
       <section class="block">
         <h2>Recent runs</h2>
@@ -189,6 +168,7 @@
 
 <script src="suite/landing.js"></script>
 <script src="suite/gate.js"></script>
+<script src="suite/sync-card.js"></script>
 <script src="js/idb.js"></script>
 <script src="js/sync-state.js"></script>
 <script src="js/sync.js"></script>
