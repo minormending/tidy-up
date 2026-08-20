@@ -499,63 +499,9 @@ button {
 
 /* ---- grown-up entry ---- */
 
-/* The way in for a grown-up. It is a real, visible button because a faint
-   dot was not findable; a plain tap still does nothing, so the hold is
-   what keeps a five-year-old out, and the ring fills to show it working. */
-.parent-corner {
-  position: fixed;
-  top: max(10px, env(safe-area-inset-top));
-  right: 10px;
-  width: 52px;
-  height: 52px;
-  z-index: 40;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  color: #7d786c;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
-  -webkit-touch-callout: none;
-  transition: color 150ms ease, border-color 150ms ease;
-}
+/* The hold-to-open button itself now lives in css/grownup.css, so that all
+   three apps open their grown-up panel with the same control. */
 
-.parent-corner[hidden] { display: none; }
-
-.parent-glyph {
-  width: 25px;
-  height: 25px;
-  display: block;
-}
-
-.parent-ring {
-  position: absolute;
-  inset: -1px;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  transform: rotate(-90deg);
-  pointer-events: none;
-}
-
-.parent-ring-fill {
-  fill: none;
-  stroke: var(--go);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 138.2;
-  stroke-dashoffset: 138.2;
-  transition: stroke-dashoffset 200ms ease;
-}
-
-.parent-corner.is-holding {
-  color: var(--ink);
-  border-color: transparent;
-}
-
-.parent-corner.is-holding .parent-ring-fill {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1600ms linear;
 }
 
 /* ---- fitting the screen it is actually on ---- */
