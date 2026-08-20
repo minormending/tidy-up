@@ -2,15 +2,17 @@
    in the stylesheet. Editing this file by slicing between markers has twice
    silently deleted a whole section; this catches that.
 
-   Both stylesheets count: the grown-up controls live in css/grownup.css,
-   which is shared byte-for-byte with Letter Sounds and Behaviour Garden.
+   Every stylesheet counts, including the two shared byte-for-byte with
+   Letter Sounds and Behaviour Garden: css/grownup.css for the grown-up
+   controls and css/landing.css for the front door.
 
    Run with:  node test/css-test.js                                        */
 const fs = require('fs');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
-const css = ['app.css', 'grownup.css']
+const SHARED = ['grownup.css', 'landing.css'];
+const css = ['app.css', ...SHARED]
   .map(f => fs.readFileSync(path.join(root, 'css', f), 'utf8'))
   .join('\n');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
@@ -55,26 +57,28 @@ if (missing.length) {
 }
 console.log('every applied class has a rule.');
 
-/* css/grownup.css is the suite's shared grown-up kit and is meant to be the
-   same file in all three apps. Editing one copy and forgetting the others is
-   the obvious way for them to drift back apart, so say so here. Siblings that
-   are not checked out are skipped rather than failed - this is a nudge, not a
-   dependency. */
+/* The shared stylesheets are meant to be the same file in all three apps.
+   Editing one copy and forgetting the other two is the obvious way for the
+   suite to drift back apart, so say so here. A sibling that is not checked
+   out is skipped rather than failed - this is a nudge, not a dependency. */
 const siblings = [
-  ['learn-letters', '../learn-letters/css/grownup.css'],
-  ['behaviour-garden', '../behaviour-garden/grownup.css']
+  ['learn-letters', f => '../learn-letters/css/' + f],
+  ['behaviour-garden', f => '../behaviour-garden/' + f]
 ];
-const mine = fs.readFileSync(path.join(root, 'css', 'grownup.css'), 'utf8');
 const drifted = [];
-for (const [name, rel] of siblings) {
-  const file = path.join(root, rel);
-  if (!fs.existsSync(file)) continue;
-  if (fs.readFileSync(file, 'utf8') !== mine) drifted.push(name + '  (' + rel + ')');
+for (const shared of SHARED) {
+  const mine = fs.readFileSync(path.join(root, 'css', shared), 'utf8');
+  for (const [name, where] of siblings) {
+    const rel = where(shared);
+    const file = path.join(root, rel);
+    if (!fs.existsSync(file)) continue;
+    if (fs.readFileSync(file, 'utf8') !== mine) drifted.push(shared + '  differs from  ' + rel);
+  }
 }
 if (drifted.length) {
-  console.error('\ncss/grownup.css differs from:');
+  console.error('\nthe shared stylesheets have drifted apart:');
   drifted.forEach(d => console.error('  ' + d));
-  console.error('Copy whichever one is right over the others.');
+  console.error('Copy whichever copy is right over the others.');
   process.exit(1);
 }
-console.log('grownup.css matches every sibling app that is checked out.');
+console.log('shared stylesheets match every sibling app that is checked out.');
