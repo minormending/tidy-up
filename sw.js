@@ -1,6 +1,12 @@
 /* Cache the shell so the app opens on a tablet with no wi-fi.
-   Bump CACHE when any shell file changes. */
-const CACHE = 'tidyup-v16';
+   Bump CACHE when any shell file changes.
+
+   The sync files are shell, so they are listed here. The Firebase SDK they pull
+   from a CDN is deliberately NOT: the fetch handler below only caches
+   same-origin responses, so offline the import fails, the bridge catches it and
+   the app runs local-only. Which is the right outcome — sync needs a network by
+   definition, and a tidy-up session must never wait on one. */
+const CACHE = 'tidyup-v17';
 const SHELL = [
   './',
   './index.html',
@@ -14,6 +20,9 @@ const SHELL = [
   './js/parent.js',
   './js/backup.js',
   './js/app.js',
+  './sync/firebase-config.js',
+  './sync/kidsync.js',
+  './sync/bridge.js',
   './manifest.webmanifest',
   './icons/icon.svg',
   './icons/icon-192.png',
