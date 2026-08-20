@@ -35,9 +35,10 @@ const Kid = (() => {
       s.hidden = s.dataset.screen !== name;
     });
     /* Hidden mid-job, where it would sit on top of the progress bar on a
-       narrow screen, and in the panel it opens. */
+       narrow screen, in the panel it opens, and on the front door, which is
+       one tap from the jobs and is left clean in all three games. */
     const corner = document.getElementById('parent-corner');
-    if (corner) corner.hidden = name === 'task' || name === 'parent';
+    if (corner) corner.hidden = name === 'task' || name === 'parent' || name === 'hello';
   }
 
   function level() { return Store.get().supportLevel || 1; }
@@ -432,7 +433,23 @@ const Kid = (() => {
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', onResize);
 
-    return renderStart();
+    $('hello-go').addEventListener('click', enter);
+
+    /* Paint the jobs first, then cover them with the front door, so the
+       screen behind the fade is already the real one. */
+    return renderStart().then(() => show('hello'));
+  }
+
+  /* The tap here is the one that lets WebAudio run and the recorded voice
+     play; without it the first job of the first session is silent on iOS. */
+  function enter() {
+    Chime.unlock();
+    const pad = document.getElementById('landing');
+    pad.classList.add('is-going');
+    setTimeout(() => {
+      show('start');
+      pad.classList.remove('is-going');
+    }, 260);
   }
 
   return { init, renderStart, renderRest, show };

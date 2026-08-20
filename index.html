@@ -22,6 +22,21 @@
 
 <main id="app">
 
+  <!-- The front door. It exists for the same reason Letter Sounds' does:
+       the tap is what lets the tones and the recorded voice play at all,
+       and the app should open on its own name rather than straight into a
+       grid of jobs. -->
+  <section class="screen" id="screen-hello" data-screen="hello" hidden>
+    <div class="landing" id="landing">
+      <h1 class="landing-name">Tidy Up</h1>
+      <p class="landing-lede">One job at a time, with a picture and a timer.</p>
+      <button id="hello-go" class="landing-go" aria-label="Start">
+        <svg viewBox="0 0 24 24" class="landing-go-glyph" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+      </button>
+      <p class="landing-cap">Tap to start</p>
+    </div>
+  </section>
+
   <section class="screen" id="screen-start" data-screen="start">
     <div class="panel">
       <div class="stars-row" id="week-stars" aria-hidden="true"></div>

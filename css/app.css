@@ -11,6 +11,13 @@
   --pad: clamp(12px, 3vw, 28px);
   --gap: clamp(10px, 2.4vw, 20px);
   --round: clamp(14px, 3vw, 26px);
+
+  /* The front door's skeleton is in css/landing.css; the paint is ours. */
+  --ld-ink:     var(--ink);
+  --ld-lede:    #6f6a5e;
+  --ld-cap:     #8a857a;
+  --ld-go-bg:   var(--go);
+  --ld-go-deep: var(--go-deep);
 }
 
 * { box-sizing: border-box; }
