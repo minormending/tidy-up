@@ -92,3 +92,8 @@ const Sync = (() => {
     onRender: fn => { onChange = fn; }
   };
 })();
+
+/* The contract sync/bridge.js talks to. The name is the same in every app using
+   this module, which is what lets them all share one identical bridge instead of
+   three near-copies that quietly drift apart. */
+window.SyncHost = Sync;
