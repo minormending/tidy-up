@@ -7,7 +7,7 @@
 # Bypassed with: git commit --no-verify
 
 if ! command -v node >/dev/null 2>&1; then
-  echo "pre-commit: node not found, cannot run test/css-test.js" >&2
+  echo "pre-commit: node not found, cannot run the tests" >&2
   exit 1
 fi
 
@@ -15,5 +15,13 @@ node test/css-test.js || {
   echo "" >&2
   echo "pre-commit: styling is missing for the classes listed above." >&2
   echo "Fix css/app.css, or commit with --no-verify if this is deliberate." >&2
+  exit 1
+}
+
+# Merging two devices' progress has to converge, or the two of them republish at
+# each other forever. Cheap to check, miserable to debug in the wild.
+node test/sync-merge-test.js || {
+  echo "" >&2
+  echo "pre-commit: the progress merge is not behaving. See above." >&2
   exit 1
 }
