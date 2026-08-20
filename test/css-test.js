@@ -2,19 +2,21 @@
    in the stylesheet. Editing this file by slicing between markers has twice
    silently deleted a whole section; this catches that.
 
-   Every stylesheet counts, including the two shared byte-for-byte with
-   Letter Sounds and Behaviour Garden: css/grownup.css for the grown-up
-   controls and css/landing.css for the front door.
+   Every stylesheet counts, including the vendored ones in suite/. Those are
+   not checked for drift here any more -- kidsuite's own tools/check does that
+   for every consumer at once, rather than this app hardcoding a list of its
+   siblings and app number four being quietly left out of it.
 
    Run with:  node test/css-test.js                                        */
 const fs = require('fs');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
-const SHARED = ['grownup.css', 'landing.css'];
-const css = ['app.css', ...SHARED]
-  .map(f => fs.readFileSync(path.join(root, 'css', f), 'utf8'))
-  .join('\n');
+const css = [
+  path.join(root, 'css', 'app.css'),
+  path.join(root, 'suite', 'grownup.css'),
+  path.join(root, 'suite', 'landing.css'),
+].map(f => fs.readFileSync(f, 'utf8')).join('\n');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const scripts = fs.readdirSync(path.join(root, 'js'))
   .filter(f => f.endsWith('.js'))
@@ -56,29 +58,3 @@ if (missing.length) {
   process.exit(1);
 }
 console.log('every applied class has a rule.');
-
-/* The shared stylesheets are meant to be the same file in all three apps.
-   Editing one copy and forgetting the other two is the obvious way for the
-   suite to drift back apart, so say so here. A sibling that is not checked
-   out is skipped rather than failed - this is a nudge, not a dependency. */
-const siblings = [
-  ['learn-letters', f => '../learn-letters/css/' + f],
-  ['behaviour-garden', f => '../behaviour-garden/' + f]
-];
-const drifted = [];
-for (const shared of SHARED) {
-  const mine = fs.readFileSync(path.join(root, 'css', shared), 'utf8');
-  for (const [name, where] of siblings) {
-    const rel = where(shared);
-    const file = path.join(root, rel);
-    if (!fs.existsSync(file)) continue;
-    if (fs.readFileSync(file, 'utf8') !== mine) drifted.push(shared + '  differs from  ' + rel);
-  }
-}
-if (drifted.length) {
-  console.error('\nthe shared stylesheets have drifted apart:');
-  drifted.forEach(d => console.error('  ' + d));
-  console.error('Copy whichever copy is right over the others.');
-  process.exit(1);
-}
-console.log('shared stylesheets match every sibling app that is checked out.');
