@@ -25,11 +25,27 @@
    ============================================================ */
 
 :root {
-  /* Big enough to be the only thing worth pressing, capped so it does
-     not become a dinner plate on a tablet. Internal to this file --
-     the landscape rule below retunes it, so an app that overrode it
-     would lose that. Apps set the colours, not the size. */
-  --ld-tap: min(34vw, 168px);
+  /* One number drives the whole door, the way --stage drives the garden
+     next door. Width-bound on a phone, height-bound on a short landscape
+     screen, and capped so it stops growing on a monitor. Everything below
+     is a fraction of it, so the door fills a tablet instead of sitting
+     phone-sized in the middle of one, and so nothing needs a second set
+     of sizes for landscape.
+
+     Internal to this file: apps set the colours, not the size.
+
+     The vh version is the fallback. Left on its own, a browser without
+     dvh would throw out the whole declaration, leave --ld-stage unset,
+     and every calc() below with it -- which is a button with no size
+     rather than a slightly wrong one. */
+  --ld-stage: min(92vw, 62vh, 560px);
+  --ld-tap: calc(var(--ld-stage) * 0.38);
+}
+
+@supports (height: 1dvh) {
+  /* dvh, so the browser chrome sliding away on a phone does not resize
+     the door underneath the child's finger. */
+  :root { --ld-stage: min(92vw, 62dvh, 560px); }
 }
 
 .landing {
@@ -38,14 +54,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.8rem, 3vh, 1.6rem);
-  padding: 6vh 6vw;
+  gap: calc(var(--ld-stage) * 0.036);
+  padding: 5vh 5vw;
   text-align: center;
 }
 
 .landing-name {
   margin: 0;
-  font-size: clamp(2rem, 8vw, 3.4rem);
+  font-size: max(1.6rem, calc(var(--ld-stage) * 0.105));
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.01em;
@@ -59,7 +75,7 @@
 .landing-lede {
   margin: 0;
   max-width: 26ch;
-  font-size: clamp(1rem, 3.4vw, 1.25rem);
+  font-size: max(0.95rem, calc(var(--ld-stage) * 0.047));
   line-height: 1.4;
   color: var(--ld-lede, #8a8178);
   text-shadow: var(--ld-shadow, none);
@@ -68,7 +84,7 @@
 .landing-go {
   width: var(--ld-tap);
   height: var(--ld-tap);
-  margin-top: clamp(0.4rem, 2vh, 1.2rem);
+  margin-top: calc(var(--ld-stage) * 0.03);
   flex: none;
   border: none;
   border-radius: 50%;
@@ -119,7 +135,7 @@
 .landing-cap {
   margin: 0;
   min-height: 1.5em;
-  font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  font-size: max(0.9rem, calc(var(--ld-stage) * 0.042));
   color: var(--ld-cap, #8a8178);
   text-shadow: var(--ld-shadow, none);
 }
@@ -128,7 +144,7 @@
   margin: 0;
   max-width: 30ch;
   min-height: 1.4em;
-  font-size: 0.95rem;
+  font-size: max(0.85rem, calc(var(--ld-stage) * 0.037));
   line-height: 1.4;
   color: var(--ld-err, #b4503c);
   text-shadow: var(--ld-shadow, none);
@@ -148,12 +164,7 @@
   .landing, .landing-go { transition-duration: 1ms !important; }
 }
 
-/* Short and wide — a phone on its side. The name and the button
-   cannot both have their full height, and the button is the one
-   being reached for. */
-@media (orientation: landscape) and (max-height: 560px) {
-  :root { --ld-tap: min(22vh, 112px); }
-  .landing { gap: clamp(0.4rem, 1.6vh, 0.9rem); padding: 4vh 6vw; }
-  .landing-name { font-size: clamp(1.5rem, 5vh, 2.4rem); }
-  .landing-lede { font-size: clamp(0.9rem, 2.6vh, 1.1rem); }
-}
+/* No landscape rules. --ld-stage is bound by height as well as width, so
+   a phone on its side shrinks the whole door together rather than needing
+   its own set of sizes that then have to be kept in step with these. The
+   max() floors are what stop the small text following it down. */
