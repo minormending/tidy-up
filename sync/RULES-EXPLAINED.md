@@ -32,7 +32,7 @@ authenticate. What it does is worth having anyway:
 ### `$roomId.length >= 16`
 A cheap guard that the path looks like a real generated room id
 (`gamename-WORD-WORD-WORD-123`) rather than someone poking at `/rooms/a`. It is
-not the security boundary — the 2.1 billion possible codes are. It just blocks
+not the security boundary — the two billion possible codes are. It just blocks
 the laziest probing.
 
 **Why 16 and not something rounder:** the shortest code the generator can

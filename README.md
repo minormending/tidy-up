@@ -167,7 +167,7 @@ after the page loads at all.
 Sharing has no accounts. Each device signs in anonymously so that completely
 unauthenticated access is refused and every write is attributable, but anyone
 can obtain an anonymous session, so that is not a privacy boundary: the room
-code is. Roughly 2.1 billion of them, and anyone holding one can read and write
+code is. Roughly two billion of them, and anyone holding one can read and write
 that progress record. Fine for stars and tick counts, which is exactly why
 nothing else is in there. `sync/RULES-EXPLAINED.md` goes through the database
 rules line by line.

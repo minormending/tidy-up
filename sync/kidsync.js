@@ -27,7 +27,7 @@ import {
 
 // Room codes are read aloud and typed by children, so: no homophones, no words
 // that differ only by a doubled letter, nothing that invites a spelling debate.
-// 128 words = 7 bits each. 3 words + 3 digits ≈ 2.1 billion combinations, which
+// 128 words. Three distinct words + 3 digits is just over two billion codes, which
 // is the entropy that makes "anyone who knows the code has access" acceptable.
 const WORDS = (
   "apple arrow bacon badge bagel banjo beach bean bear bell berry bird boat bone " +
@@ -56,9 +56,18 @@ function randomInt(max) {
 }
 
 function generateCode() {
-  const w = [0, 1, 2].map(() => WORDS[randomInt(WORDS.length)].toUpperCase());
+  /* Drawn without replacement. Independent draws produce codes like
+     MITTEN-GHOST-MITTEN, which a five-year-old has to read aloud and someone
+     else has to type — a repeated word in the middle of that is a needless
+     stumble. Costs almost nothing: 128 x 127 x 126 x 1000 is still just over
+     two billion combinations. */
+  const picked = [];
+  while (picked.length < 3) {
+    const word = WORDS[randomInt(WORDS.length)];
+    if (picked.indexOf(word) < 0) picked.push(word);
+  }
   const digits = String(randomInt(1000)).padStart(3, "0");
-  return `${w.join("-")}-${digits}`;
+  return `${picked.map(w => w.toUpperCase()).join("-")}-${digits}`;
 }
 
 /** Accepts sloppy human input: lowercase, spaces instead of dashes, stray
