@@ -42,7 +42,12 @@ const Store = (() => {
     weekStart: 0,
     weeks: [],
     sessions: [],
-    done: null
+    done: null,
+    /* Bumped by the two grown-up clears below. A clear has to beat a merge:
+       without these, the other device's higher numbers merge straight back in
+       and the clear undoes itself. Never travels as progress; see sync-state.js. */
+    starsEpoch: 0,
+    doneEpoch: 0
   };
 
   let state = null;
@@ -114,9 +119,12 @@ const Store = (() => {
     }
   }
 
+  /* Every mutation in the app already funnels through here, which makes it the
+     one honest place to notice that something changed and needs publishing. */
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); }
     catch (err) { /* private mode or full: the session still runs */ }
+    if (typeof Sync !== 'undefined') Sync.push();
   }
 
   function get() { return state; }
@@ -219,12 +227,14 @@ const Store = (() => {
 
   function clearToday() {
     state.done = { date: today(), counts: {} };
+    state.doneEpoch = (state.doneEpoch || 0) + 1;
     save();
   }
 
   function resetStars() {
     state.stars = 0;
     state.weekStart = startOfWeek(Date.now());
+    state.starsEpoch = (state.starsEpoch || 0) + 1;
     save();
   }
 

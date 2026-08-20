@@ -6,7 +6,7 @@
    same-origin responses, so offline the import fails, the bridge catches it and
    the app runs local-only. Which is the right outcome — sync needs a network by
    definition, and a tidy-up session must never wait on one. */
-const CACHE = 'tidyup-v18';
+const CACHE = 'tidyup-v19';
 const SHELL = [
   './',
   './index.html',
@@ -14,6 +14,7 @@ const SHELL = [
   './js/idb.js',
   './js/store.js',
   './js/sync-state.js',
+  './js/sync.js',
   './js/chime.js',
   './js/icons.js',
   './js/qr.js',

@@ -168,6 +168,8 @@
 </button>
 
 <script src="js/idb.js"></script>
+<script src="js/sync-state.js"></script>
+<script src="js/sync.js"></script>
 <script src="js/store.js"></script>
 <script src="js/chime.js"></script>
 <script src="js/icons.js"></script>
@@ -176,6 +178,8 @@
 <script src="js/parent.js"></script>
 <script src="js/backup.js"></script>
 <script src="js/app.js"></script>
+<!-- Optional. Loads after the app and degrades to local-only if it cannot start. -->
+<script type="module" src="sync/bridge.js"></script>
 
 </body>
 </html>
