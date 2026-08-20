@@ -119,12 +119,52 @@ Photos and recordings deliberately are not in the code, and no amount of
 compression would change that: a QR code holds about 2.9KB and one 720px photo
 is fifty times that. Use a backup file to move media.
 
+**Two devices at once.** The setup code and a backup file each move things once,
+deliberately, every time you use them. Live sharing keeps two devices in step as you go:
+a job finished on the tablet shows as done on your phone a moment later. Turn it
+on in the grown-up panel, read the code off one device, type it into the other.
+
+Only the day's progress travels — stars, today's per-job counts, the week
+archive, and the run log. Three things deliberately do not:
+
+| Left out | Why |
+|---|---|
+| Photos and voice clips | They never leave the device they were made on. A photo of your child's room and a recording of your own voice are not going near a shared database, and one photo is fifty times what a room can hold anyway. |
+| The job list | It already has a way to travel — the setup code, which keeps whatever photos and recordings the receiving device already has. Live-syncing the list as well would fight that and could break a device's media associations for no gain. |
+| Chime on/off | One tablet is usually the muted one. |
+
+So the setup code configures a device and live sharing keeps the day in step.
+
+Merging never lowers anything, which is the same promise the rest of the app
+makes: a star is never taken away, and a job's count only ever goes up. The two
+grown-up clears are the exceptions and they work by bumping a counter that beats
+a merge — otherwise the other device's higher numbers would merge straight back
+and undo the clear. Clearing today and clearing the week are independent, so
+one does not touch the other. Joining a device to an existing code is never
+destructive, however many times that code has been cleared.
+
+If sharing cannot start — no network, blocked domain, missing config — it is one
+line in the console and an app that behaves exactly as it did before. Tidy Up is
+a local app that can sync, not a sync app.
+
 ## Privacy
 
 Photos and voice recordings never leave the device. They live in the browser's
-IndexedDB; the task list and stars live in `localStorage`. There is no backend,
-no analytics, and no network request after the page loads. Nothing personal is
-in this repository.
+IndexedDB; the task list and stars live in `localStorage`. There is no backend
+you run and no analytics, and nothing personal is in this repository.
+
+Live sharing is the one thing here that touches the network, and it is off until
+you turn it on. Even then it carries only the numbers listed above — never a
+photo, a recording, or a job name. Leave it off and there is no network request
+after the page loads at all.
+
+Sharing has no accounts. Each device signs in anonymously so that completely
+unauthenticated access is refused and every write is attributable, but anyone
+can obtain an anonymous session, so that is not a privacy boundary: the room
+code is. Roughly 2.1 billion of them, and anyone holding one can read and write
+that progress record. Fine for stars and tick counts, which is exactly why
+nothing else is in there. `sync/RULES-EXPLAINED.md` goes through the database
+rules line by line.
 
 A setup code encodes only the job names, timers, and support level, in the
 link itself — it is never sent anywhere. A backup file is written straight to
@@ -152,21 +192,32 @@ js/chime.js         the few tones, made with WebAudio
 js/icons.js         vendored Phosphor icons (MIT), only the ones used
 js/backup.js        backup files and setup codes
 js/qr.js            QR encoder
+js/sync-state.js    what merging two devices' progress means (no DOM, testable)
+js/sync.js          live sync plumbing
+sync/               the sync module, its config, and the database rules
 sw.js               offline shell
 test/qr-test.js     checks the encoder against a reference implementation
 test/css-test.js    checks no styling has been deleted by accident
-.githooks/          pre-commit hook running that check
+test/sync-merge-test.js  checks the progress merge converges
+.githooks/          pre-commit hook running both checks
 ```
 
 ## Tests
 
 ```
-node test/qr-test.js && node test/css-test.js
+node test/qr-test.js && node test/css-test.js && node test/sync-merge-test.js
 ```
 
 `css-test.js` checks that every class the markup and scripts actually apply has
 a rule in the stylesheet. Editing that file by slicing between markers has
 twice silently deleted a whole section, so this guards against it.
+
+`sync-merge-test.js` checks that merging two devices' progress converges. Three
+of its cases are bugs that were real: taking the max of stars across two
+different weeks resurrected last week's total into this one; identical counts
+held in a different key order made each device see the other as changed and
+republish forever; and `Store.today()` emits `2026-8-9`, which sorts *after*
+`2026-8-10` as a string.
 
 It also runs as a pre-commit hook. The hook is tracked in `.githooks/`, so
 turn it on once per clone:
