@@ -545,141 +545,38 @@ button {
   * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
 
-/* ---- grown-up panel ---- */
+/* ---- grown-up panel: the parts that are only Tidy Up's ----
+
+   The sheet, the cards, the buttons, the fields, the run log and the
+   sharing panel all come from css/grownup.css, shared with Letter Sounds
+   and Behaviour Garden. What is left below is the job list and the picture
+   picker, which no other app has. */
 
 .screen--parent {
   justify-content: flex-start;
-  align-items: center;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  background: var(--paper);
-  padding-bottom: 3rem;
+  align-items: stretch;
+  padding: 0;
+  gap: 0;
 }
 
-.sheet {
-  width: min(100%, 680px);
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-  text-align: left;
-  -webkit-user-select: text;
-  user-select: text;
-}
+/* Recording is a state you can get stuck in, so it must not look like
+   every other button on the sheet. */
+.grownup .btn.is-recording { background: #fdecec; border-color: #e6b3b3; color: #9a2b2b; }
 
-.sheet-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  background: var(--paper);
-  padding: 0.5rem 0;
-  z-index: 2;
-}
-
-.sheet h1 { font-size: 1.25rem; font-weight: 600; margin: 0; }
-.sheet h2 { font-size: 1rem; font-weight: 600; margin: 0 0 0.35rem; }
-
-.block {
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  border-radius: 14px;
-  padding: 1rem 1.1rem 1.15rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.hint {
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: #6f6a5e;
-}
-
-.stat { margin: 0; font-size: 0.95rem; }
-
-.nudge {
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: #7a4a12;
-  background: var(--star-soft);
-  border-radius: 10px;
-  padding: 0.6rem 0.7rem;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  min-height: 40px;
-  padding: 0 0.9rem;
-  border-radius: 10px;
-  border: 1px solid var(--hairline);
-  background: var(--surface);
-  font-size: 0.9rem;
-  color: var(--ink);
-}
-
-.btn:active { background: #f0ede4; }
-.btn:disabled { opacity: 0.35; cursor: default; }
-.btn--quiet { min-height: 36px; font-size: 0.85rem; background: #faf8f2; }
-.btn--plain { border-color: transparent; background: transparent; font-weight: 600; }
-.btn.is-recording { background: #fdecec; border-color: #e6b3b3; color: #9a2b2b; }
-
-.btn-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-/* display:flex beats the hidden attribute, same as .go-button and the rest. */
-.btn-row[hidden] { display: none; }
-
-.sync-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  align-self: center;
-  padding: 0.4rem 0.6rem;
-  border-radius: 8px;
-  background: #f0ede4;
-  color: var(--ink);
-  word-break: break-all;
-}
-
-.field { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.9rem; }
-.field--row { flex-direction: row; align-items: center; gap: 0.6rem; }
-/* Without min-width:0 the range keeps its intrinsic width, the row
-   overflows, and the seconds readout slides under the arrow column. */
-.field--row input[type="range"] { flex: 1; min-width: 0; }
-
-.input {
-  width: 100%;
-  min-height: 40px;
-  padding: 0 0.7rem;
-  border-radius: 10px;
-  border: 1px solid var(--hairline);
-  background: var(--surface);
-  font: inherit;
-  font-size: 0.95rem;
-  color: var(--ink);
-}
-
-.task-row {
+.grownup .task-row {
   display: flex;
   gap: 0.8rem;
   padding: 0.85rem 0;
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--gu-line);
 }
 
-#task-list .task-row:first-child { border-top: none; padding-top: 0; }
+.grownup #task-list .task-row:first-child { border-top: none; padding-top: 0; }
 
-.task-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+.grownup .task-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.55rem; }
 
 /* Reordering lives down the right-hand edge, away from the per-job
    actions, so the row reads as picture - job - position. */
-.task-move {
+.grownup .task-move {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -687,78 +584,83 @@ button {
   flex: none;
 }
 
-.move-button {
+.grownup .move-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 36px;
   height: 32px;
+  padding: 0;
   border-radius: 9px;
-  border: 1px solid var(--hairline);
-  background: var(--surface);
-  color: #6f6a5e;
+  border: 1px solid var(--gu-line);
+  background: var(--gu-surface);
+  color: var(--gu-ink-2);
+  cursor: pointer;
   transition: background-color 120ms ease, color 120ms ease;
 }
 
-.move-button:hover:not(:disabled) { background: #faf8f2; color: var(--ink); }
-.move-button:active:not(:disabled) { background: #efece3; }
-.move-button:disabled { opacity: 0.28; cursor: default; }
+.grownup .move-button:hover:not(:disabled) { background: var(--gu-sunk); color: var(--gu-ink); }
+.grownup .move-button:active:not(:disabled) { background: var(--gu-soft); }
+.grownup .move-button:disabled { opacity: 0.28; cursor: default; }
 
-.move-glyph { width: 19px; height: 19px; display: block; }
+.grownup .move-glyph { width: 19px; height: 19px; display: block; }
 
 /* Removing a job sits between its arrows, red so it does not get pressed
    by mistake while reordering. It still asks before deleting anything. */
-.move-button--remove {
-  color: #a33131;
-  border-color: #e8cfcf;
+.grownup .move-button--remove {
+  color: var(--gu-rose);
+  border-color: var(--gu-rose-line);
 }
 
-.move-button--remove:hover:not(:disabled) { background: #fdecec; color: #832525; }
-.move-button--remove:active:not(:disabled) { background: #f8dada; }
+.grownup .move-button--remove:hover:not(:disabled) { background: var(--gu-rose-bg); color: #832525; }
+.grownup .move-button--remove:active:not(:disabled) { background: #f6ddd7; }
 
-.thumb {
+.grownup .thumb {
   position: relative;
   width: 76px;
   height: 76px;
   flex: none;
   border-radius: 12px;
-  background: #f0ede4 center/cover no-repeat;
-  border: 1px solid var(--hairline);
+  background: var(--gu-soft) center/cover no-repeat;
+  border: 1px solid var(--gu-line);
   padding: 0;
   cursor: pointer;
   overflow: visible;
   transition: transform 120ms ease, border-color 120ms ease;
 }
 
-.thumb:hover { border-color: #c4bda9; }
-.thumb:active { transform: scale(0.95); }
+.grownup .thumb:hover { border-color: var(--gu-line-2); }
+.grownup .thumb:active { transform: scale(0.95); }
 
-.thumb-edit {
+.grownup .thumb-edit {
   position: absolute;
   right: -7px;
   bottom: -7px;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--hairline);
+  background: var(--gu-surface);
+  border: 1px solid var(--gu-line);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.thumb-edit .icon-svg { width: 56%; height: 56%; }
+.grownup .thumb-edit .icon-svg { width: 56%; height: 56%; }
 
-.thumb.is-icon {
+.grownup .thumb.is-icon {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.thumb.is-icon .icon-svg { width: 56%; height: 56%; }
+.grownup .thumb.is-icon .icon-svg { width: 56%; height: 56%; }
 
 /* ---- choosing a picture ---- */
 
 /* Seventy icons in nine groups would otherwise push the rest of the job
    list a screen and a half down, so the picker scrolls in place. */
-.picture-picker {
+.grownup .picture-picker {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -766,139 +668,81 @@ button {
   max-height: 46vh;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: #faf8f2;
-  border: 1px solid var(--hairline);
+  background: var(--gu-sunk);
+  border: 1px solid var(--gu-line);
   border-radius: 12px;
 }
 
-.picker-heading {
+.grownup .picker-heading {
   margin: 0.45rem 0 0.1rem;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: #8a857a;
+  color: var(--gu-muted);
 }
 
-.picker-heading:first-child { margin-top: 0; }
+.grownup .picker-heading:first-child { margin-top: 0; }
 
-.swatch-row {
+.grownup .swatch-row {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
   gap: 6px;
 }
 
-.swatch {
+.grownup .swatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   aspect-ratio: 1;
   min-height: 42px;
-  border-radius: 10px;
+  padding: 0;
+  border-radius: var(--gu-r-sm);
   border: 2px solid transparent;
+  cursor: pointer;
 }
 
-.swatch .icon-svg { width: 52%; height: 52%; }
-.swatch.is-current { border-color: var(--ink); }
+.grownup .swatch .icon-svg { width: 52%; height: 52%; }
+.grownup .swatch.is-current { border-color: var(--gu-ink); }
 
 /* Stays put while the results scroll under it. */
-.icon-search {
+.grownup .icon-search {
   position: sticky;
   top: -0.75rem;
   z-index: 1;
   width: 100%;
   margin: 0.35rem 0 0.1rem;
-  background: var(--surface);
+  background: var(--gu-surface);
 }
 
-.icon-results {
+.grownup .icon-results {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.icon-grid {
+.grownup .icon-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
   gap: 6px;
 }
 
-.icon-cell {
+.grownup .icon-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   aspect-ratio: 1;
   min-height: 46px;
-  border-radius: 10px;
+  padding: 0;
+  border-radius: var(--gu-r-sm);
   border: 1px solid transparent;
-  background: var(--surface);
+  background: var(--gu-surface);
+  cursor: pointer;
 }
 
-.icon-cell .icon-svg { width: 56%; height: 56%; }
-.icon-cell:active { background: #efece3; }
+.grownup .icon-cell .icon-svg { width: 56%; height: 56%; }
+.grownup .icon-cell:active { background: var(--gu-soft); }
 
-.icon-cell.is-current {
-  border-color: var(--go);
-  background: #f1f7ea;
+.grownup .icon-cell.is-current {
+  border-color: var(--gu-accent);
+  background: var(--gu-accent-bg);
 }
-
-/* ---- support levels and the run log ---- */
-
-.level {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.15rem;
-  text-align: left;
-  width: 100%;
-  padding: 0.7rem 0.8rem;
-  border-radius: 12px;
-  border: 1px solid var(--hairline);
-  background: #faf8f2;
-}
-
-.level.is-current { border-color: var(--go); background: #f1f7ea; }
-.level-title { font-size: 0.92rem; font-weight: 600; }
-.level-body { font-size: 0.82rem; color: #6f6a5e; line-height: 1.45; }
-
-.history { display: flex; flex-direction: column; gap: 0.3rem; }
-
-.history-line {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 0.85rem;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid #f0ede4;
-}
-
-.history-line:last-child { border-bottom: none; }
-
-/* ---- backup, and an incoming setup code ---- */
-
-.banner {
-  background: #eef4e6;
-  border: 1px solid #c6d9b0;
-  border-radius: 12px;
-  padding: 0.85rem 0.9rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.banner[hidden] { display: none; }
-.banner p { margin: 0; font-size: 0.88rem; line-height: 1.5; }
-
-.qr-holder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.9rem;
-  background: #ffffff;
-  border: 1px solid var(--hairline);
-  border-radius: 12px;
-}
-
-.qr-holder[hidden] { display: none; }
-
-.qr-holder svg {
-  width: min(100%, 260px);
-  height: auto;
-  image-rendering: pixelated;
-}
-
-.qr-holder .hint { text-align: center; }

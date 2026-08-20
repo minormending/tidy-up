@@ -72,10 +72,10 @@
   </section>
 
 
-  <section class="screen screen--parent" id="screen-parent" data-screen="parent" hidden>
-    <div class="sheet">
+  <section class="screen screen--parent grownup" id="screen-parent" data-screen="parent" hidden>
+    <div class="gu-sheet">
 
-      <header class="sheet-head">
+      <header class="gu-head">
         <h1>Grown-up settings</h1>
         <button class="btn btn--plain" id="parent-close">Done</button>
       </header>
@@ -86,7 +86,7 @@
         <h2>Jobs</h2>
         <p class="hint">Photograph the real bin or shelf, and record the instruction in your own voice. Both stay on this device &mdash; nothing is uploaded.</p>
         <div id="task-list"></div>
-        <button class="btn" id="add-task">Add a job</button>
+        <button class="btn btn--go btn--wide" id="add-task">Add a job</button>
       </section>
 
       <section class="block">
@@ -131,7 +131,7 @@
         <h2>Backup and moving</h2>
         <p class="hint">A backup file carries everything &mdash; jobs, photos, recordings, stars. Keep one somewhere safe: clearing the browser&rsquo;s site data erases the setup and there is no copy anywhere else.</p>
         <div class="btn-row">
-          <button class="btn" id="export-file">Save a backup file</button>
+          <button class="btn btn--go" id="export-file">Save a backup file</button>
           <label class="btn btn--quiet">Load a backup file<input type="file" id="import-file" accept="application/json,.json" hidden></label>
         </div>
         <p class="hint">A setup code moves the job list to another device by camera. Names, timers, and support level only &mdash; a QR code holds about 2.9KB and one photo is fifty times that.</p>
@@ -145,7 +145,7 @@
         <p class="hint">Jobs, photos and recordings do not. Those move with a backup file or the setup code above &mdash; a photo of your child&rsquo;s room and your recorded voice stay on the device they were made on.</p>
         <p class="stat" id="sync-state"></p>
         <div class="btn-row" id="sync-off" hidden>
-          <button class="btn" id="sync-start">Start sharing</button>
+          <button class="btn btn--go" id="sync-start">Start sharing</button>
           <button class="btn btn--quiet" id="sync-join">Enter a code</button>
         </div>
         <div class="btn-row" id="sync-on" hidden>
@@ -154,9 +154,9 @@
         </div>
         <div id="sync-join-box" hidden>
           <p class="hint">Type the code shown on the other device. Connecting merges the two, and nothing is ever lowered, so no star or tick is lost either way.</p>
-          <input class="input" id="sync-code-input" type="text" placeholder="WORD-WORD-WORD-123" autocomplete="off" autocapitalize="characters" spellcheck="false">
+          <input class="input input--code" id="sync-code-input" type="text" placeholder="WORD-WORD-WORD-123" autocomplete="off" autocapitalize="characters" spellcheck="false">
           <div class="btn-row">
-            <button class="btn" id="sync-join-go">Connect</button>
+            <button class="btn btn--go" id="sync-join-go">Connect</button>
             <button class="btn btn--quiet" id="sync-join-cancel">Cancel</button>
           </div>
           <p class="hint" id="sync-join-msg" hidden></p>
