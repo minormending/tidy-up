@@ -143,8 +143,8 @@ and undo the clear. Clearing today and clearing the week are independent, so
 one does not touch the other. Joining a device to an existing code is never
 destructive, however many times that code has been cleared.
 
-The `sync/` folder is vendored rather than written here: its canonical copy lives
-in the sibling `kidsync` repo, shared with the other games. Edit it there and run
+The `sync/` folder is vendored rather than written here: its canonical copy is
+[minormending/kidsync](https://github.com/minormending/kidsync), shared with the other games. Edit it there and run
 `kidsync/tools/install`, which also reminds you to bump `CACHE` in `sw.js`;
 `kidsync/tools/check` fails if a copy has drifted. What belongs to *this* app is
 `js/sync-state.js` — the merge rules — and the card in the panel.
@@ -200,7 +200,7 @@ js/backup.js        backup files and setup codes
 js/qr.js            QR encoder
 js/sync-state.js    what merging two devices' progress means (no DOM, testable)
 js/sync.js          live sync plumbing
-sync/               vendored from ../kidsync — edit it there, not here
+sync/               vendored from minormending/kidsync — edit it there, not here
 sw.js               offline shell
 test/qr-test.js     checks the encoder against a reference implementation
 test/css-test.js    checks no styling has been deleted by accident
