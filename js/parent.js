@@ -1,6 +1,5 @@
 /* The grown-up side. Words are allowed in here. */
 const Parent = (() => {
-  const HOLD_MS = 1600;
   const MAX_AUDIO_MS = 12000;
   const PHOTO_MAX = 720;
 
@@ -12,6 +11,7 @@ const Parent = (() => {
   ];
 
   let recorder = null;
+  let gate = null;
   let recordingFor = null;
   let preview = null;
 
@@ -26,25 +26,17 @@ const Parent = (() => {
 
   /* ---- getting in ---- */
 
+  /* The button, the hold and the ring all come from suite/gate.js. A plain tap
+     still does nothing -- the hold is what keeps a five-year-old out. */
   function bindCorner() {
-    const corner = $('parent-corner');
-    let timer = null;
-    const begin = () => {
-      corner.classList.add('is-holding');
-      timer = setTimeout(open, HOLD_MS);
-    };
-    const cancel = () => {
-      corner.classList.remove('is-holding');
-      clearTimeout(timer);
-    };
-    corner.addEventListener('pointerdown', begin);
-    corner.addEventListener('pointerup', cancel);
-    corner.addEventListener('pointercancel', cancel);
-    corner.addEventListener('pointerleave', cancel);
+    gate = Gate.mount({
+      id: 'parent-corner',           // Kid.show hides it by id, from the other file
+      hidden: true,                  // Kid.show decides, and it boots on the door
+      onOpen: open,
+    });
   }
 
   function open() {
-    $('parent-corner').classList.remove('is-holding');
     render();
     Kid.show('parent');
   }
