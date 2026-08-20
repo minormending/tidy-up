@@ -99,13 +99,20 @@
   box-shadow: 0 6px 0 var(--ld-go-deep, #2f6153);
 }
 
+/* Sized from the number that sizes the button, not as a percentage of
+   it. A percentage width on an <svg> inside a grid container resolves
+   against the item's own height rather than the grid area, so the
+   triangle came out at 42% of 42% -- under half the size it should be,
+   and the button read as small however big the circle got. The height
+   was right, so it was drawn small and centred in a tall box. calc()
+   off --ld-tap cannot get that wrong, in grid or anywhere else. */
 .landing-go-glyph {
-  width: 42%;
-  height: 42%;
+  width: calc(var(--ld-tap) * 0.42);
+  height: calc(var(--ld-tap) * 0.42);
   display: block;
   /* An equilateral triangle sits visually left of centre in its own
      box; nudge it back or the circle looks lopsided. */
-  margin-left: 6%;
+  margin-left: calc(var(--ld-tap) * 0.025);
   fill: currentColor;
 }
 
