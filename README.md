@@ -147,7 +147,9 @@ The `sync/` folder is vendored rather than written here: its canonical copy is
 [minormending/kidsync](https://github.com/minormending/kidsync), shared with the other games. Edit it there and run
 `kidsync/tools/install`, which also reminds you to bump `CACHE` in `sw.js`;
 `kidsync/tools/check` fails if a copy has drifted. What belongs to *this* app is
-`js/sync-state.js` — the merge rules — and the card in the panel.
+`js/sync-state.js` — the merge rules. The card in the panel is not: that is
+`suite/sync-card.js`, shared with the other games, and this app supplies only
+its wording and what to do once a room exists.
 
 If sharing cannot start — no network, blocked domain, missing config — it is one
 line in the console and an app that behaves exactly as it did before. Tidy Up is
@@ -187,22 +189,36 @@ dependencies. Camera and microphone need `localhost` or HTTPS.
 
 ## The shared look
 
-The front door the app opens on — its name, the line under it, the round play
-button — and the grown-up panel's controls are not written here. They are
+Four things are not written here. They are
 [minormending/kidsuite](https://github.com/minormending/kidsuite), vendored into
 `suite/` the same way `sync/` is, and shared with the other games so the three
 read as one suite rather than three unrelated apps.
+
+| | |
+|---|---|
+| `landing.css` + `landing.js` | the front door — the name, the line under it, the round play button, and the fade out of it |
+| `gate.js` | the hold-to-open button that reaches the grown-up panel |
+| `sync-card.js` | the whole *Two devices at once* card, including the pairing flow |
+| `grownup.css` | the panel's controls — cards, buttons, fields |
 
 Edit it there and run `kidsuite/tools/install`, which also reminds you to bump
 `CACHE` in `sw.js`; `kidsuite/tools/check` fails if a copy has drifted. Never
 edit `suite/` directly.
 
-What belongs to *this* app is the paint and the one thing the door has to do
-here: the `--ld-` and `--gu-` tokens at the top of `css/app.css`, and
-`Chime.unlock()` on the way through, without which the tones and the recorded
-voice cannot play at all on iOS. The words on the door are for whoever is
-holding the tablet, same as the labels under the job pictures; what the child
-has to understand is the round button.
+What belongs to *this* app is small, and worth knowing exactly:
+
+- **The paint** — the `--ld-` and `--gu-` tokens at the top of `css/app.css`.
+- **`Chime.unlock()` on the way through the door**, without which the tones and
+  the recorded voice cannot play at all on iOS. That tap is the whole reason the
+  door is worth having here.
+- **Where the way in is offered** — `Kid.show` hides it mid-job and on the front
+  door.
+- **The sharing card's prose**, and recording the room after creating one.
+
+The words on the door are for whoever is holding the tablet, same as the labels
+under the job pictures; what the child has to understand is the round button.
+The job list and the picture picker are the only parts of the panel with
+styling of their own; every other control in it comes from the shared kit.
 
 ## Layout
 
